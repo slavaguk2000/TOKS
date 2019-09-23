@@ -32,7 +32,7 @@ namespace ComPort
 
         private void serialPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {
-            throw new NotImplementedException();
+            mainForm.addControlDebugString("Receive error");
         }
 
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -43,10 +43,18 @@ namespace ComPort
 
         public void sendData(string message)
         {
-            serialPort.RtsEnable = true;
-            serialPort.WriteLine(message);
-            while (serialPort.BytesToWrite > 0);
-            serialPort.RtsEnable = false;
+            try
+            {
+                serialPort.RtsEnable = true;
+                serialPort.WriteLine(message);
+                while (serialPort.BytesToWrite > 0) ;
+                serialPort.RtsEnable = false;
+                mainForm.addControlDebugString("Transmit error");
+            }
+            catch (Exception ex)
+            {
+                mainForm.addControlDebugString("Transmit error");
+            }
         }
     }
 }

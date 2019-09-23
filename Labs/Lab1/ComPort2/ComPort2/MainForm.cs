@@ -86,7 +86,12 @@ namespace ComPort
 
         public void addOutputString(string message)
         {
-            outputLabel.BeginInvoke((MethodInvoker)(delegate { this.outputLabel.Text += message + "\n"; }));
+            outputLabel.BeginInvoke((MethodInvoker)(delegate { outputLabel.Text += message + "\n"; }));
+        }
+
+        public void addControlDebugString(string message)
+        {
+            controlLabel.BeginInvoke((MethodInvoker)(delegate { controlLabel.Text += message + "\n"; }));
         }
 
         private void ComPortComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -118,6 +123,11 @@ namespace ComPort
         private void ComPortComboBox_DropDown(object sender, EventArgs e)
         {
             updateCompPortComboBox();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
