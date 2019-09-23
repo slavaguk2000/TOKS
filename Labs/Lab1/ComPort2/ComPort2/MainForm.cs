@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,11 +15,16 @@ namespace ComPort
     {
         ComPortTransmitter transmitter;
 
+        private void updateCompPortComboBox()
+        {
+            ComPortComboBox.Items.Clear();
+            ComPortComboBox.Items.AddRange(SerialPort.GetPortNames());
+        }
+
         public MainForm()
         {
             InitializeComponent();
-            transmitter = new ComPortTransmitter("COM1", this);
-
+            updateCompPortComboBox();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -65,6 +71,11 @@ namespace ComPort
         {
             if(e.KeyChar == '\r')
             {
+                if(transmitter == null)
+                {
+                    MessageBox.Show("Choose COM-Port please", "ERROR!!!");
+                    return;
+                }
                 TextBox inputTextBox = (TextBox)sender;
                 
                 addOutputString(inputTextBox.Text);
@@ -76,6 +87,16 @@ namespace ComPort
         public void addOutputString(string message)
         {
             outputLabel.Text += message + "\n";
+        }
+
+        private void ComPortComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {            
+            transmitter = new ComPortTransmitter(((ComboBox)sender).SelectedItem.ToString(), this);
+        }
+
+        private void ComPortComboBox_DropDown(object sender, EventArgs e)
+        {
+            updateCompPortComboBox();
         }
     }
 }

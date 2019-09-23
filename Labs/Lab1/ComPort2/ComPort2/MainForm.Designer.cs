@@ -130,6 +130,8 @@
             this.ComPortComboBox.Name = "ComPortComboBox";
             this.ComPortComboBox.Size = new System.Drawing.Size(121, 21);
             this.ComPortComboBox.TabIndex = 3;
+            this.ComPortComboBox.DropDown += new System.EventHandler(this.ComPortComboBox_DropDown);
+            this.ComPortComboBox.SelectedIndexChanged += new System.EventHandler(this.ComPortComboBox_SelectedIndexChanged);
             // 
             // radioButtonRTS
             // 
