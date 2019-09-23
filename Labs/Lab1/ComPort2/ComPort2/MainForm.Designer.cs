@@ -39,9 +39,13 @@
             this.radioButtonRTS = new System.Windows.Forms.RadioButton();
             this.radioButtonDTR = new System.Windows.Forms.RadioButton();
             this.inputTextBox = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.controlLabel = new System.Windows.Forms.Label();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.outputPanel.SuspendLayout();
+            this.controlGroupBox.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // inputGroupBox
@@ -94,9 +98,13 @@
             // 
             this.controlGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.controlGroupBox.Location = new System.Drawing.Point(12, 249);
+            this.controlGroupBox.Controls.Add(this.panel1);
+            this.controlGroupBox.Controls.Add(this.radioButtonDTR);
+            this.controlGroupBox.Controls.Add(this.controlEnableCheckBox);
+            this.controlGroupBox.Controls.Add(this.radioButtonRTS);
+            this.controlGroupBox.Location = new System.Drawing.Point(12, 195);
             this.controlGroupBox.Name = "controlGroupBox";
-            this.controlGroupBox.Size = new System.Drawing.Size(260, 100);
+            this.controlGroupBox.Size = new System.Drawing.Size(260, 154);
             this.controlGroupBox.TabIndex = 0;
             this.controlGroupBox.TabStop = false;
             this.controlGroupBox.Text = "Control && Debug";
@@ -106,7 +114,7 @@
             this.controlEnableCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.controlEnableCheckBox.AutoSize = true;
-            this.controlEnableCheckBox.Location = new System.Drawing.Point(12, 195);
+            this.controlEnableCheckBox.Location = new System.Drawing.Point(6, 18);
             this.controlEnableCheckBox.Name = "controlEnableCheckBox";
             this.controlEnableCheckBox.Size = new System.Drawing.Size(95, 17);
             this.controlEnableCheckBox.TabIndex = 1;
@@ -138,7 +146,7 @@
             this.radioButtonRTS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonRTS.AutoSize = true;
             this.radioButtonRTS.Enabled = false;
-            this.radioButtonRTS.Location = new System.Drawing.Point(125, 196);
+            this.radioButtonRTS.Location = new System.Drawing.Point(119, 19);
             this.radioButtonRTS.Name = "radioButtonRTS";
             this.radioButtonRTS.Size = new System.Drawing.Size(73, 17);
             this.radioButtonRTS.TabIndex = 4;
@@ -152,7 +160,7 @@
             this.radioButtonDTR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonDTR.AutoSize = true;
             this.radioButtonDTR.Enabled = false;
-            this.radioButtonDTR.Location = new System.Drawing.Point(125, 219);
+            this.radioButtonDTR.Location = new System.Drawing.Point(119, 42);
             this.radioButtonDTR.Name = "radioButtonDTR";
             this.radioButtonDTR.Size = new System.Drawing.Size(76, 17);
             this.radioButtonDTR.TabIndex = 4;
@@ -172,13 +180,28 @@
             this.inputTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.inputTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.inputTextBox_KeyPress);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.controlLabel);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(3, 68);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(254, 83);
+            this.panel1.TabIndex = 5;
+            // 
+            // controlLabel
+            // 
+            this.controlLabel.AutoSize = true;
+            this.controlLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.controlLabel.Location = new System.Drawing.Point(0, 0);
+            this.controlLabel.Name = "controlLabel";
+            this.controlLabel.Size = new System.Drawing.Size(0, 13);
+            this.controlLabel.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(284, 361);
-            this.Controls.Add(this.radioButtonDTR);
-            this.Controls.Add(this.radioButtonRTS);
             this.Controls.Add(this.ComPortComboBox);
-            this.Controls.Add(this.controlEnableCheckBox);
             this.Controls.Add(this.ComPortLabel);
             this.Controls.Add(this.controlGroupBox);
             this.Controls.Add(this.outputGroupBox);
@@ -191,6 +214,10 @@
             this.outputGroupBox.ResumeLayout(false);
             this.outputPanel.ResumeLayout(false);
             this.outputPanel.PerformLayout();
+            this.controlGroupBox.ResumeLayout(false);
+            this.controlGroupBox.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,6 +236,8 @@
         private System.Windows.Forms.Panel outputPanel;
         private System.Windows.Forms.Label outputLabel;
         private System.Windows.Forms.TextBox inputTextBox;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label controlLabel;
     }
 }
 
