@@ -12,6 +12,10 @@ namespace ComPort
         private SerialPort serialPort;
         private MainForm mainForm;
 
+        public delegate void ComPortMessageHandler(string message);
+
+        public event ComPortMessageHandler DataRecived;
+
         public ComPortTransmitter(string port, MainForm mainForm)
         {
             serialPort = new SerialPort(port, 9600, Parity.None, 8, StopBits.One);
@@ -21,23 +25,26 @@ namespace ComPort
 
             this.mainForm = mainForm;
         }
+        public void close()
+        {
+            serialPort.Close();
+        }
 
         private void serialPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            byte[] data = new byte[serialPort.BytesToRead];
-            serialPort.Read(data, 0, data.Length);
-
+            string message = serialPort.ReadLine();
+            DataRecived?.Invoke(message);
         }
 
-        void serialPort_SendData(byte[] data)
+        public void sendData(string message)
         {
             serialPort.RtsEnable = true;
-            serialPort.Write(data, 0, data.Length);
+            serialPort.WriteLine(message);
             while (serialPort.BytesToWrite > 0);
             serialPort.RtsEnable = false;
         }

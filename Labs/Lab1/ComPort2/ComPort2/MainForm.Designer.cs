@@ -125,7 +125,7 @@
             // 
             // ComPortComboBox
             // 
-            this.ComPortComboBox.FormattingEnabled = true;
+            this.ComPortComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComPortComboBox.Location = new System.Drawing.Point(71, 6);
             this.ComPortComboBox.Name = "ComPortComboBox";
             this.ComPortComboBox.Size = new System.Drawing.Size(121, 21);

@@ -77,8 +77,8 @@ namespace ComPort
                     return;
                 }
                 TextBox inputTextBox = (TextBox)sender;
-                
-                addOutputString(inputTextBox.Text);
+
+                transmitter.sendData(inputTextBox.Text);
 
                 inputTextBox.Text = string.Empty;
             }            
@@ -86,12 +86,33 @@ namespace ComPort
 
         public void addOutputString(string message)
         {
-            outputLabel.Text += message + "\n";
+            outputLabel.BeginInvoke((MethodInvoker)(delegate { this.outputLabel.Text += message + "\n"; }));
         }
 
         private void ComPortComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {            
-            transmitter = new ComPortTransmitter(((ComboBox)sender).SelectedItem.ToString(), this);
+        {
+            ComboBox comPortsComboBox = (ComboBox)sender;
+            if (transmitter != null)
+            {
+                transmitter.DataRecived -= Transmitter_DataRecived;
+                transmitter.close();
+            }
+            if (comPortsComboBox.SelectedIndex == -1) return;
+            try
+            {
+                transmitter = new ComPortTransmitter(comPortsComboBox.SelectedItem.ToString(), this);
+            }catch(Exception ex)
+            {
+                comPortsComboBox.SelectedIndex = -1;
+                MessageBox.Show("Can't open this port. Please try another.", "ERROR!!!!!!");               
+                return;
+            }
+            transmitter.DataRecived += Transmitter_DataRecived;
+        }
+
+        private void Transmitter_DataRecived(string message)
+        {
+            addOutputString(message);
         }
 
         private void ComPortComboBox_DropDown(object sender, EventArgs e)
