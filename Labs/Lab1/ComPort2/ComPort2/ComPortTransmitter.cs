@@ -5,9 +5,12 @@ using System.Timers;
 
 namespace ComPort
 {
+    class SendException : Exception
+    { }
+
     class ComPortTransmitter
     {
-        private const int timeout = 10000000;
+        private const int timeout = 1000;
         private Thread reciveThread;
         private SerialPort serialPort;
         private MainForm mainForm;
@@ -83,7 +86,7 @@ namespace ComPort
                 char recived = (char)serialPort.ReadChar();
                 mainForm.addControlDebugString("char was got");
                 if (recived == '\0') printMessage();
-                recivingMessage += recived;
+                else recivingMessage += recived;
             }
             catch (TimeoutException)
             {
@@ -95,6 +98,15 @@ namespace ComPort
                 recivingMessage = "";
                 mainForm.addControlDebugString("read char error");
             }
+        }
+
+        private void flushRecivingMessage()
+        {
+            if (!recivingMessage.Equals("") && recivingMessage.Length > 0)
+            {
+                mainForm.addOutputString(recivingMessage);                
+            }
+            recivingMessage = "";
         }
 
         public void resiveRTSChecked()
@@ -110,6 +122,7 @@ namespace ComPort
                 {
                     if (!timerIsStart)
                     {
+                        flushRecivingMessage();
                         mainForm.addControlDebugString("wait CTS timeout");
                         serialPort.RtsEnable = false;
                         mainForm.addControlDebugString("RTS reset");
@@ -145,6 +158,7 @@ namespace ComPort
                 {
                     if (!timerIsStart)
                     {
+                        flushRecivingMessage();
                         mainForm.addControlDebugString("wait DSR timeout");
                         serialPort.DtrEnable = false;
                         mainForm.addControlDebugString("DTR reset");
@@ -204,8 +218,9 @@ namespace ComPort
             }
             catch (TimeoutException)
             {
-                recivingMessage = "";
+                flushRecivingMessage();
                 mainForm.addControlDebugString("char wasn't sent");
+                throw new SendException();
             }
         }
 
@@ -221,7 +236,7 @@ namespace ComPort
                     mainForm.addControlDebugString("wait CTS timeout");
                     serialPort.RtsEnable = false;
                     mainForm.addControlDebugString("RTS reset");
-                    return;
+                    throw new SendException();
                 }
             }
             deleteTimer(timer);
@@ -234,7 +249,7 @@ namespace ComPort
                 if (!timerIsStart)
                 {
                     mainForm.addControlDebugString("wait CTS timeout");
-                    return;
+                    throw new SendException();
                 }
             }
             deleteTimer(timer);
@@ -254,7 +269,7 @@ namespace ComPort
                     mainForm.addControlDebugString("wait DSR timeout");
                     serialPort.DtrEnable = false;
                     mainForm.addControlDebugString("DTR reset");
-                    return;
+                    throw new SendException();
                 }
             }
             deleteTimer(timer);
@@ -267,7 +282,7 @@ namespace ComPort
                 if (!timerIsStart)
                 {
                     mainForm.addControlDebugString("wait DSR timeout");
-                    return;
+                    throw new SendException();
                 }
             }
             deleteTimer(timer);
@@ -279,15 +294,39 @@ namespace ComPort
         {
             if (isChecked)
             {
-                inSendProcess = true;
-                foreach(char a in message)
+                System.Timers.Timer timer = startTimer();
+                while (inSendProcess)
                 {
-                    if (isRTS) sendRTSCheckedData(a);
-                    else sendDTRCheckedData(a);
+                    if (!timerIsStart)
+                    {
+                        mainForm.addControlDebugString("wait Send Process timeout");
+                        return;
+                    }
                 }
-                if (isRTS) sendRTSCheckedData('\0');
-                else sendDTRCheckedData('\0');
-                mainForm.addControlDebugString("message was sent");
+                deleteTimer(timer);
+                inSendProcess = true;
+                try
+                {
+                    foreach (char a in message)
+                    {
+                        if (isRTS) sendRTSCheckedData(a);
+                        else sendDTRCheckedData(a);
+                    }
+                }
+                catch(SendException e)
+                {
+                    mainForm.addControlDebugString("error in sending");
+                }
+                try
+                { 
+                    if (isRTS) sendRTSCheckedData('\0');
+                    else sendDTRCheckedData('\0');
+                    mainForm.addControlDebugString("message was sent");
+                }
+                catch(SendException e)
+                {
+                    mainForm.addControlDebugString("message wasn't sent");
+                }
                 inSendProcess = false;
             }
             else

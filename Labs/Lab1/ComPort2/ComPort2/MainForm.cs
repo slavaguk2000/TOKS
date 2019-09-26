@@ -185,5 +185,10 @@ namespace ComPort
         {
             transmitter?.close();
         }
+
+        private void ComPortComboBox_DropDown_1(object sender, EventArgs e)
+        {
+            updateCompPortComboBox();
+        }
     }
 }

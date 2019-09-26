@@ -131,6 +131,7 @@
             this.ComPortComboBox.Name = "ComPortComboBox";
             this.ComPortComboBox.Size = new System.Drawing.Size(121, 21);
             this.ComPortComboBox.TabIndex = 8;
+            this.ComPortComboBox.DropDown += new System.EventHandler(this.ComPortComboBox_DropDown_1);
             this.ComPortComboBox.SelectedIndexChanged += new System.EventHandler(this.ComPortComboBox_SelectedIndexChanged_1);
             // 
             // ComPortLabel
