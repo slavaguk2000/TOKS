@@ -14,7 +14,7 @@ namespace ComPort
     public partial class MainForm : Form
     {
         ComPortTransmitter transmitter;
-
+        
         private void updateCompPortComboBox()
         {
             ComPortComboBox.Items.Clear();
@@ -25,6 +25,22 @@ namespace ComPort
         {
             InitializeComponent();
             updateCompPortComboBox();
+
+        }
+
+        public bool getChecked()
+        {
+            return controlEnableCheckBox.Checked;
+        }
+
+        public bool isRTS()
+        {
+            return radioButtonRTS.Checked;
+        }
+
+        public bool isDTR()
+        {
+            return radioButtonDTR.Checked;
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -34,12 +50,12 @@ namespace ComPort
 
         private void radioButtonDTR_CheckedChanged(object sender, EventArgs e)
         {
-
+            transmitter?.setIsRTS(!((RadioButton)sender).Checked);
         }
 
         private void radioButtonRTS_CheckedChanged(object sender, EventArgs e)
         {
-
+            transmitter?.setIsRTS(((RadioButton)sender).Checked);
         }
 
         private void outputLabl_Click(object sender, EventArgs e)
@@ -59,7 +75,9 @@ namespace ComPort
        
         private void controlEnableCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            changeControlRadioButtonEnable(((CheckBox)sender).Checked);
+            bool flag = ((CheckBox)sender).Checked;
+            changeControlRadioButtonEnable(flag);
+            transmitter?.setChecked(flag);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -128,6 +146,34 @@ namespace ComPort
         private void label2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private string oldPort = "";
+
+        private void ComPortComboBox_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedIndex == -1) return;
+            string portName = (string)comboBox.SelectedItem;
+            if (portName.Equals(""))
+            {
+                comboBox.SelectedItem = oldPort;
+            }
+            else
+            {
+                if (transmitter != null) transmitter.close();
+                try
+                {
+                    transmitter = new ComPortTransmitter(portName, this);
+                }
+                catch(Exception ex)
+                {
+                    comboBox.SelectedIndex = -1;
+                    oldPort = "";
+                    transmitter = null;
+                    MessageBox.Show("Try choose another port");
+                }
+            }                
         }
     }
 }
