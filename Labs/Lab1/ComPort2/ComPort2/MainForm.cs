@@ -25,7 +25,7 @@ namespace ComPort
         {
             InitializeComponent();
             updateCompPortComboBox();
-
+            FormClosing += MainForm_FormClosing;
         }
 
         public bool getChecked()
@@ -174,6 +174,16 @@ namespace ComPort
                     MessageBox.Show("Try choose another port");
                 }
             }                
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_FormClosing(object sender, EventArgs e)
+        {
+            transmitter?.close();
         }
     }
 }

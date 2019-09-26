@@ -228,6 +228,17 @@ namespace ComPort
             mainForm.addControlDebugString("CTS set");
             serialPort.RtsEnable = false;
             mainForm.addControlDebugString("RTS reset");
+            timer = startTimer();
+            while (serialPort.CtsHolding)
+            {
+                if (!timerIsStart)
+                {
+                    mainForm.addControlDebugString("wait CTS timeout");
+                    return;
+                }
+            }
+            deleteTimer(timer);
+            mainForm.addControlDebugString("CTS reset");
             sendChar(message);
         }
 
@@ -250,6 +261,17 @@ namespace ComPort
             mainForm.addControlDebugString("DSR set");
             serialPort.DtrEnable = false;
             mainForm.addControlDebugString("DTR reset");
+            timer = startTimer();
+            while (serialPort.DsrHolding)
+            {
+                if (!timerIsStart)
+                {
+                    mainForm.addControlDebugString("wait DSR timeout");
+                    return;
+                }
+            }
+            deleteTimer(timer);
+            mainForm.addControlDebugString("DSR reset");
             sendChar(message);
         }
 
@@ -257,6 +279,7 @@ namespace ComPort
         {
             if (isChecked)
             {
+                inSendProcess = true;
                 foreach(char a in message)
                 {
                     if (isRTS) sendRTSCheckedData(a);
@@ -265,6 +288,7 @@ namespace ComPort
                 if (isRTS) sendRTSCheckedData('\0');
                 else sendDTRCheckedData('\0');
                 mainForm.addControlDebugString("message was sent");
+                inSendProcess = false;
             }
             else
             {

@@ -219,6 +219,7 @@
             this.MinimumSize = new System.Drawing.Size(300, 400);
             this.Name = "MainForm";
             this.Text = "COM-Port Tranciver";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.inputGroupBox.ResumeLayout(false);
             this.inputGroupBox.PerformLayout();
             this.outputGroupBox.ResumeLayout(false);
