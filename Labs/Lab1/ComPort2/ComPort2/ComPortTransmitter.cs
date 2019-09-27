@@ -51,6 +51,7 @@ namespace ComPort
             }
             else
             {
+                serialPort.ReadExisting();
                 serialPort.ErrorReceived += new SerialErrorReceivedEventHandler(serialPort_ErrorReceived);
                 serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
                 reciveThread.Abort();
