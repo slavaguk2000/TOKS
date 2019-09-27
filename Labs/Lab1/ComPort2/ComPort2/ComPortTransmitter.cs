@@ -48,6 +48,7 @@ namespace ComPort
                 serialPort.DataReceived -= serialPort_DataReceived;
                 reciveThread = new Thread(new ThreadStart(reciverLoop));
                 reciveThread.Start();
+                recivingMessage = "";
             }
             else
             {
@@ -152,6 +153,7 @@ namespace ComPort
             if (serialPort == null) return; 
             if (serialPort.CtsHolding && !inSendProcess)
             {
+                serialPort?.ReadExisting();
                 inSendProcess = true;
                 mainForm.addControlDebugString("CTS set");
                 serialPort.RtsEnable = true;
@@ -194,6 +196,7 @@ namespace ComPort
         {
             if (serialPort.DsrHolding && !inSendProcess)
             {
+                serialPort?.ReadExisting();
                 inSendProcess = true;
                 mainForm.addControlDebugString("DSR set");
                 serialPort.DtrEnable = true;
