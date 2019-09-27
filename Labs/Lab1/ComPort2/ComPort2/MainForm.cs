@@ -165,6 +165,7 @@ namespace ComPort
                 try
                 {
                     transmitter = new ComPortTransmitter(portName, this);
+                    oldPort = portName;
                 }
                 catch(Exception ex)
                 {
@@ -189,6 +190,14 @@ namespace ComPort
         private void ComPortComboBox_DropDown_1(object sender, EventArgs e)
         {
             updateCompPortComboBox();
+        }
+
+        private void ComPortComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.SelectedItem == null) 
+                if (!oldPort.Equals(""))
+                    comboBox.SelectedItem = oldPort;
         }
     }
 }

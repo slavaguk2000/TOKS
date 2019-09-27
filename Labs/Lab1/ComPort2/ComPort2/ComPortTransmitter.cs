@@ -57,6 +57,23 @@ namespace ComPort
             }  
         }
 
+        public void close()
+        {
+            serialPort.Close();
+        }
+
+        public void sendData(string message)
+        {
+            if (isChecked)
+            {
+                checkedSendData(message);
+            }
+            else
+            {
+                uncheckedSendData(message);
+            }
+        }
+
         private System.Timers.Timer startTimer()
         {
             timerIsStart = true;
@@ -79,7 +96,7 @@ namespace ComPort
             recivingMessage = "";
         }
 
-        public void reciveChar()
+        private void reciveChar()
         {
             try
             {
@@ -109,7 +126,26 @@ namespace ComPort
             recivingMessage = "";
         }
 
-        public void resiveRTSChecked()
+        private bool waitCTSRecive()
+        {
+            System.Timers.Timer timer = startTimer();
+            while (serialPort.CtsHolding)
+            {
+                if (!timerIsStart)
+                {
+                    flushRecivingMessage();
+                    mainForm.addControlDebugString("wait CTS timeout");
+                    serialPort.RtsEnable = false;
+                    mainForm.addControlDebugString("RTS reset");
+                    inSendProcess = false;
+                    return false;
+                }
+            }
+            deleteTimer(timer);
+            return true;
+        }
+
+        private void resiveRTSChecked()
         {
             if (serialPort.CtsHolding && !inSendProcess)
             {
@@ -117,20 +153,7 @@ namespace ComPort
                 mainForm.addControlDebugString("CTS set");
                 serialPort.RtsEnable = true;
                 mainForm.addControlDebugString("RTS set");
-                System.Timers.Timer timer = startTimer();
-                while (serialPort.CtsHolding)
-                {
-                    if (!timerIsStart)
-                    {
-                        flushRecivingMessage();
-                        mainForm.addControlDebugString("wait CTS timeout");
-                        serialPort.RtsEnable = false;
-                        mainForm.addControlDebugString("RTS reset");
-                        inSendProcess = false;
-                        return;
-                    }
-                }
-                deleteTimer(timer);
+                if (!waitCTSRecive()) return;
                 mainForm.addControlDebugString("CTS reset");
                 serialPort.RtsEnable = false;
                 mainForm.addControlDebugString("RTS reset");
@@ -139,13 +162,32 @@ namespace ComPort
             }
         }
 
-        public void deleteTimer(System.Timers.Timer timer)
+        private void deleteTimer(System.Timers.Timer timer)
         {
             timer.Stop();
             timer.Dispose();
         }
 
-        public void resiveDTRChecked()
+        private bool waitDSRRecive()
+        {
+            System.Timers.Timer timer = startTimer();
+            while (serialPort.DsrHolding)
+            {
+                if (!timerIsStart)
+                {
+                    flushRecivingMessage();
+                    mainForm.addControlDebugString("wait DSR timeout");
+                    serialPort.DtrEnable = false;
+                    mainForm.addControlDebugString("DTR reset");
+                    inSendProcess = false;
+                    return false;
+                }
+            }
+            deleteTimer(timer);
+            return true;
+        }
+
+        private void resiveDTRChecked()
         {
             if (serialPort.DsrHolding && !inSendProcess)
             {
@@ -153,20 +195,7 @@ namespace ComPort
                 mainForm.addControlDebugString("DSR set");
                 serialPort.DtrEnable = true;
                 mainForm.addControlDebugString("DTR set");
-                System.Timers.Timer timer = startTimer();
-                while (serialPort.DsrHolding)
-                {
-                    if (!timerIsStart)
-                    {
-                        flushRecivingMessage();
-                        mainForm.addControlDebugString("wait DSR timeout");
-                        serialPort.DtrEnable = false;
-                        mainForm.addControlDebugString("DTR reset");
-                        inSendProcess = false;
-                        return;
-                    }
-                }
-                deleteTimer(timer);
+                if (!waitDSRRecive()) return;
                 mainForm.addControlDebugString("DSR reset");
                 serialPort.DtrEnable = false;
                 mainForm.addControlDebugString("DTR reset");
@@ -175,7 +204,7 @@ namespace ComPort
             }
         }
         
-        void reciverLoop()
+        private void reciverLoop()
         {
             try
             {
@@ -190,12 +219,7 @@ namespace ComPort
             }
             catch (ThreadAbortException) { }
         }
-
-        public void close()
-        {
-            serialPort.Close();
-        }
-
+        
         private void serialPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {
             mainForm.addControlDebugString("Receive error");
@@ -224,124 +248,136 @@ namespace ComPort
             }
         }
 
+        private void waitCTS(bool state)
+        {
+            System.Timers.Timer timer = startTimer();
+            while (serialPort.CtsHolding != state)
+            {
+                if (!timerIsStart)
+                {
+                    mainForm.addControlDebugString("wait CTS timeout");
+                    if (state)
+                    {
+                        serialPort.RtsEnable = false;
+                        mainForm.addControlDebugString("RTS reset");
+                    }
+                    throw new SendException();
+                }
+            }
+            deleteTimer(timer);
+        }
+
         private void sendRTSCheckedData(char message)
         {
             serialPort.RtsEnable = true;
             mainForm.addControlDebugString("RTS set");
-            System.Timers.Timer timer = startTimer();
-            while (!serialPort.CtsHolding)
-            {
-                if (!timerIsStart)
-                {
-                    mainForm.addControlDebugString("wait CTS timeout");
-                    serialPort.RtsEnable = false;
-                    mainForm.addControlDebugString("RTS reset");
-                    throw new SendException();
-                }
-            }
-            deleteTimer(timer);
+            waitCTS(true);
             mainForm.addControlDebugString("CTS set");
             serialPort.RtsEnable = false;
             mainForm.addControlDebugString("RTS reset");
-            timer = startTimer();
-            while (serialPort.CtsHolding)
+            waitCTS(false);
+            mainForm.addControlDebugString("CTS reset");
+            sendChar(message);
+        }
+
+        private void waitDSR(bool state)
+        {
+            System.Timers.Timer timer = startTimer();
+            while (serialPort.DsrHolding != state)
             {
                 if (!timerIsStart)
                 {
-                    mainForm.addControlDebugString("wait CTS timeout");
+                    mainForm.addControlDebugString("wait DSR timeout");
+                    if(state)
+                    {
+                        serialPort.DtrEnable = false;
+                        mainForm.addControlDebugString("DTR reset");
+                    }
                     throw new SendException();
                 }
             }
             deleteTimer(timer);
-            mainForm.addControlDebugString("CTS reset");
-            sendChar(message);
         }
 
         private void sendDTRCheckedData(char message)
         {
             serialPort.DtrEnable = true;
             mainForm.addControlDebugString("DTR set");
-            System.Timers.Timer timer = startTimer();
-            while (!serialPort.DsrHolding)
-            {
-                if (!timerIsStart)
-                {
-                    mainForm.addControlDebugString("wait DSR timeout");
-                    serialPort.DtrEnable = false;
-                    mainForm.addControlDebugString("DTR reset");
-                    throw new SendException();
-                }
-            }
-            deleteTimer(timer);
+            waitDSR(true);
             mainForm.addControlDebugString("DSR set");
             serialPort.DtrEnable = false;
             mainForm.addControlDebugString("DTR reset");
-            timer = startTimer();
-            while (serialPort.DsrHolding)
-            {
-                if (!timerIsStart)
-                {
-                    mainForm.addControlDebugString("wait DSR timeout");
-                    throw new SendException();
-                }
-            }
-            deleteTimer(timer);
+            waitDSR(false);
             mainForm.addControlDebugString("DSR reset");
             sendChar(message);
         }
 
-        public void sendData(string message)
+        private bool isChanelFree()
         {
-            if (isChecked)
+            System.Timers.Timer timer = startTimer();
+            while (inSendProcess)
             {
-                System.Timers.Timer timer = startTimer();
-                while (inSendProcess)
+                if (!timerIsStart)
                 {
-                    if (!timerIsStart)
-                    {
-                        mainForm.addControlDebugString("wait Send Process timeout");
-                        return;
-                    }
+                    mainForm.addControlDebugString("wait Send Process timeout");
+                    return false;
                 }
-                deleteTimer(timer);
-                inSendProcess = true;
-                try
-                {
-                    foreach (char a in message)
-                    {
-                        if (isRTS) sendRTSCheckedData(a);
-                        else sendDTRCheckedData(a);
-                    }
-                }
-                catch(SendException e)
-                {
-                    mainForm.addControlDebugString("error in sending");
-                }
-                try
-                { 
-                    if (isRTS) sendRTSCheckedData('\0');
-                    else sendDTRCheckedData('\0');
-                    mainForm.addControlDebugString("message was sent");
-                }
-                catch(SendException e)
-                {
-                    mainForm.addControlDebugString("message wasn't sent");
-                }
-                inSendProcess = false;
             }
-            else
+            deleteTimer(timer);
+            return true;
+        }
+
+        private void sendMessageForBytes(string message)
+        {
+            try
             {
-                try
+                foreach (char a in message)
                 {
-                    serialPort.WriteLine(message);
-                    while (serialPort.BytesToWrite > 0);
-                    mainForm.addControlDebugString("message was sent");
+                    if (isRTS) sendRTSCheckedData(a);
+                    else sendDTRCheckedData(a);
                 }
-                catch (Exception ex)
-                {
-                    mainForm.addControlDebugString("Transmit error");
-                }
+            }
+            catch (SendException e)
+            {
+                mainForm.addControlDebugString("error in sending");
             }
         }
-    }
+
+        private void sendEndOfMessage()
+        {
+            try
+            {
+                if (isRTS) sendRTSCheckedData('\0');
+                else sendDTRCheckedData('\0');
+                mainForm.addControlDebugString("message was sent");
+            }
+            catch (SendException e)
+            {
+                mainForm.addControlDebugString("message wasn't sent");
+            }
+        }
+
+        private void checkedSendData(string message)
+        {
+            if (!isChanelFree()) return;
+            inSendProcess = true;
+            sendMessageForBytes(message);
+            sendEndOfMessage();
+            inSendProcess = false;
+        }
+
+        private void uncheckedSendData(string message)
+        {
+            try
+            {
+                serialPort.WriteLine(message);
+                while (serialPort.BytesToWrite > 0) ;
+                mainForm.addControlDebugString("message was sent");
+            }
+            catch (Exception ex)
+            {
+                mainForm.addControlDebugString("Transmit error");
+            }
+        }
+     }
 }
