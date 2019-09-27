@@ -27,7 +27,7 @@ namespace ComPort
         {
             this.mainForm = mainForm;
             serialPort = new SerialPort(port, 9600, Parity.None, 8, StopBits.One);
-            serialPort.Open();//TODO: close on the end of application
+            serialPort.Open();
             reciveThread = new Thread(new ThreadStart(reciverLoop));
             isRTS = mainForm.isRTS();
             setChecked(mainForm.getChecked());
@@ -59,18 +59,19 @@ namespace ComPort
 
         public void close()
         {
+            reciveThread.Abort();
             serialPort.Close();
         }
 
-        public void sendData(string message)
+        public bool sendData(string message)
         {
             if (isChecked)
             {
-                checkedSendData(message);
+                return checkedSendData(message);
             }
             else
             {
-                uncheckedSendData(message);
+                return uncheckedSendData(message);
             }
         }
 
@@ -147,6 +148,7 @@ namespace ComPort
 
         private void resiveRTSChecked()
         {
+            if (serialPort == null) return; 
             if (serialPort.CtsHolding && !inSendProcess)
             {
                 inSendProcess = true;
@@ -327,7 +329,7 @@ namespace ComPort
             return true;
         }
 
-        private void sendMessageForBytes(string message)
+        private bool sendMessageForBytes(string message)
         {
             try
             {
@@ -336,10 +338,12 @@ namespace ComPort
                     if (isRTS) sendRTSCheckedData(a);
                     else sendDTRCheckedData(a);
                 }
+                return true;
             }
             catch (SendException e)
             {
                 mainForm.addControlDebugString("error in sending");
+                return false;
             }
         }
 
@@ -357,26 +361,29 @@ namespace ComPort
             }
         }
 
-        private void checkedSendData(string message)
+        private bool checkedSendData(string message)
         {
-            if (!isChanelFree()) return;
+            if (!isChanelFree()) return false;
             inSendProcess = true;
-            sendMessageForBytes(message);
+            bool answer = sendMessageForBytes(message);
             sendEndOfMessage();
             inSendProcess = false;
+            return answer;
         }
 
-        private void uncheckedSendData(string message)
+        private bool uncheckedSendData(string message)
         {
             try
             {
                 serialPort.WriteLine(message);
                 while (serialPort.BytesToWrite > 0) ;
                 mainForm.addControlDebugString("message was sent");
+                return true;
             }
             catch (Exception ex)
             {
                 mainForm.addControlDebugString("Transmit error");
+                return false;
             }
         }
      }

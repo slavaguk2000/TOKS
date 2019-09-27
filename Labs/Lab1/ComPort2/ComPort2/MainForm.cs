@@ -96,9 +96,8 @@ namespace ComPort
                 }
                 TextBox inputTextBox = (TextBox)sender;
 
-                transmitter.sendData(inputTextBox.Text);
-
-                inputTextBox.Text = string.Empty;
+                if(transmitter.sendData(inputTextBox.Text))
+                    inputTextBox.Text = string.Empty;
             }            
         }
 
