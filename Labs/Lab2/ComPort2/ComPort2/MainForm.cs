@@ -26,8 +26,6 @@ namespace ComPort
 
         public MainForm()
         {
-            string a = "23456sas";
-            string b = a.Substring(1, a.Length - 1 < 4? a.Length - 1:4);
             InitializeComponent();
             updateCompPortComboBox();
             FormClosing += MainForm_FormClosing;
@@ -191,8 +189,8 @@ namespace ComPort
             {
                 if (newAddress > 255) newAddress = 255;
                 if (newAddress < 0) newAddress = 0;
-                if (source) packager.sourceAddress = (byte)newAddress;
-                else packager.distanitionAddress = (byte)newAddress;
+                if (source) packager.sourceAddress = (char)newAddress;
+                else packager.distanitionAddress = (char)newAddress;
             }
             else
             {

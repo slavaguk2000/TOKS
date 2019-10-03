@@ -18,6 +18,7 @@ namespace ComPort
         private bool timerIsStart;
         private bool isRTS, isChecked;
         string recivingMessage;
+        string endRecivingMessage;
         bool inSendProcess = false;
 
         public delegate void ComPortMessageHandler(string message);
@@ -33,6 +34,7 @@ namespace ComPort
             isRTS = mainForm.isRTS();
             setChecked(mainForm.getChecked());
             recivingMessage = "";
+            endRecivingMessage = "";
         }
 
         public void setIsRTS(bool flag)
@@ -50,6 +52,7 @@ namespace ComPort
                 reciveThread = new Thread(new ThreadStart(reciverLoop));
                 reciveThread.Start();
                 recivingMessage = "";
+                endRecivingMessage = "";
             }
             else
             {
@@ -110,11 +113,34 @@ namespace ComPort
             timerIsStart = false;
         }
 
+        private void parcePackage()
+        {
+            try
+            {
+                string message = mainForm.packager.unpackage(mainForm.packager.unByteStaffing(recivingMessage));
+                if(message.Length == 5)
+                {
+                    endRecivingMessage
+                }
+            }
+            catch (FormatException)
+            {
+                recivingMessage = "";
+            }
+            catch (InvalidProgramException)
+            {
+                recivingMessage = "";
+                mainForm.addControlDebugString("Got error message");
+            }
+            catch (Exception) { }
+        }
+
         private void printMessage()
         {
             mainForm.addOutputString(recivingMessage);
             mainForm.addControlDebugString("message was got");
             recivingMessage = "";
+            endRecivingMessage = "";
         }
 
         private void reciveChar()
@@ -123,17 +149,19 @@ namespace ComPort
             {
                 char recived = (char)serialPort.ReadChar();
                 mainForm.addControlDebugString("char was got");
-                if (recived == '\0') printMessage();
-                else recivingMessage += recived;
+                if (recived == Packager.flag || recivingMessage.Length > 0) recivingMessage += recived;
+                else if (recivingMessage.Length >= Packager.packageSize) parcePackage();
             }
             catch (TimeoutException)
             {
                 recivingMessage = "";
+                endRecivingMessage = "";
                 mainForm.addControlDebugString("read char timeout");
             }
             catch (Exception)
             {
                 recivingMessage = "";
+                endRecivingMessage = "";
                 mainForm.addControlDebugString("read char error");
             }
         }
@@ -145,6 +173,7 @@ namespace ComPort
                 mainForm.addOutputString(recivingMessage);                
             }
             recivingMessage = "";
+            endRecivingMessage = "";
         }
 
         private bool waitCTSRecive()

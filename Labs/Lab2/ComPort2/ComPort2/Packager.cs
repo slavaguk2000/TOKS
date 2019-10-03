@@ -8,23 +8,23 @@ namespace ComPort
 {
     public class Packager
     {
-        private const byte flag = 10;
-        private const byte ESC = 125;
-        private const byte ESCChange = 93;
-        private const byte flagChange = 94;
+        public const char flag = (char)10;
+        private const char ESC = (char)125;
+        private const char ESCChange = (char)93;
+        private const char flagChange = (char)94;
         private const byte headerSize = 3;
         private const byte trailerSize = 1;
         private const byte dataSize = 5;
-        private const byte packageSize = headerSize + trailerSize + dataSize;
+        public const byte packageSize = headerSize + trailerSize + dataSize;
 
-        public byte distanitionAddress { get; set; }
-        public byte sourceAddress { get; set; }
+        public char distanitionAddress { get; set; }
+        public char sourceAddress { get; set; }
         public bool error { get; set; }
 
         public Packager(byte distanitionAddress, byte sourceAddress, bool error)
         {
-            this.distanitionAddress = distanitionAddress;
-            this.sourceAddress = sourceAddress;
+            this.distanitionAddress = (char)distanitionAddress;
+            this.sourceAddress = (char)sourceAddress;
             this.error = error;
         }
 
@@ -38,15 +38,15 @@ namespace ComPort
             message += data;
             for (int i = data.Length; i < dataSize; i++)
                 message += '\0';
-            message += error ? 1 : 0;
+            message += (char)(error ? 1 : 0);
             return message;
         }
 
         public string unpackage(string message)
         {
-            if (message.Length != packageSize || message[0] != flag) throw new Exception("Invalid message");
+            if (message.Length != packageSize || message[0] != flag) throw new FormatException("Invalid message");
             if (message[1] != sourceAddress) throw new Exception("Invalid address");
-            if (message[headerSize + dataSize] == 1) throw new Exception("Error message");
+            if (message[headerSize + dataSize] == 1) throw new InvalidProgramException("Error message");
             return message.Substring(headerSize, dataSize);
         }
 
@@ -71,10 +71,10 @@ namespace ComPort
         public string unByteStaffing(string staffMessage)
         {
             string message = "";
-            if (staffMessage.Length < packageSize || staffMessage[0] != flag) throw new Exception("Invalid message");
+            if (staffMessage.Length < packageSize || staffMessage[0] != flag) throw new FormatException("Invalid message");
             message += flag;
             bool esc = false;
-            foreach (byte symbol in staffMessage.Substring(1))
+            foreach (char symbol in staffMessage.Substring(1))
             {
                 if (esc)
                 {
