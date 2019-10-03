@@ -34,6 +34,10 @@
             this.outputPanel = new System.Windows.Forms.Panel();
             this.outputLabel = new System.Windows.Forms.Label();
             this.controlGroupBox = new System.Windows.Forms.GroupBox();
+            this.ErrorGenerationCheckBox = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.ComPortComboBox = new System.Windows.Forms.ComboBox();
             this.ComPortLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -42,12 +46,8 @@
             this.radioButtonDTR = new System.Windows.Forms.RadioButton();
             this.controlEnableCheckBox = new System.Windows.Forms.CheckBox();
             this.radioButtonRTS = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.ErrorGenerationCheckBox = new System.Windows.Forms.CheckBox();
-            this.DistanitionAddressTextBox = new System.Windows.Forms.TextBox();
             this.SourceAddressTextBox = new System.Windows.Forms.TextBox();
+            this.DistanitionAddressTextBox = new System.Windows.Forms.TextBox();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.outputPanel.SuspendLayout();
@@ -117,8 +117,8 @@
             this.controlGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.controlGroupBox.Controls.Add(this.SourceAddressTextBox);
             this.controlGroupBox.Controls.Add(this.DistanitionAddressTextBox);
+            this.controlGroupBox.Controls.Add(this.SourceAddressTextBox);
             this.controlGroupBox.Controls.Add(this.ErrorGenerationCheckBox);
             this.controlGroupBox.Controls.Add(this.label3);
             this.controlGroupBox.Controls.Add(this.label2);
@@ -135,6 +135,47 @@
             this.controlGroupBox.TabIndex = 0;
             this.controlGroupBox.TabStop = false;
             this.controlGroupBox.Text = "Control && Debug";
+            this.controlGroupBox.Enter += new System.EventHandler(this.controlGroupBox_Enter);
+            // 
+            // ErrorGenerationCheckBox
+            // 
+            this.ErrorGenerationCheckBox.AutoSize = true;
+            this.ErrorGenerationCheckBox.Location = new System.Drawing.Point(327, 66);
+            this.ErrorGenerationCheckBox.Name = "ErrorGenerationCheckBox";
+            this.ErrorGenerationCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.ErrorGenerationCheckBox.TabIndex = 10;
+            this.ErrorGenerationCheckBox.UseVisualStyleBackColor = true;
+            this.ErrorGenerationCheckBox.CheckedChanged += new System.EventHandler(this.ErrorGenerationCheckBox_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(229, 67);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(85, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Error generation:";
+            this.label3.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(215, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(99, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Distanition address:";
+            this.label2.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(230, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(84, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Source address:";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // ComPortComboBox
             // 
@@ -224,63 +265,29 @@
             this.radioButtonRTS.UseVisualStyleBackColor = true;
             this.radioButtonRTS.CheckedChanged += new System.EventHandler(this.radioButtonRTS_CheckedChanged);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(230, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Source address:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(215, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Distanition address:";
-            this.label2.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(229, 67);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Error generation:";
-            this.label3.Click += new System.EventHandler(this.label1_Click);
-            // 
-            // ErrorGenerationCheckBox
-            // 
-            this.ErrorGenerationCheckBox.AutoSize = true;
-            this.ErrorGenerationCheckBox.Location = new System.Drawing.Point(329, 66);
-            this.ErrorGenerationCheckBox.Name = "ErrorGenerationCheckBox";
-            this.ErrorGenerationCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.ErrorGenerationCheckBox.TabIndex = 10;
-            this.ErrorGenerationCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // DistanitionAddressTextBox
-            // 
-            this.DistanitionAddressTextBox.Location = new System.Drawing.Point(314, 41);
-            this.DistanitionAddressTextBox.Name = "DistanitionAddressTextBox";
-            this.DistanitionAddressTextBox.Size = new System.Drawing.Size(43, 20);
-            this.DistanitionAddressTextBox.TabIndex = 11;
-            this.DistanitionAddressTextBox.Text = "0";
-            this.DistanitionAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // SourceAddressTextBox
             // 
             this.SourceAddressTextBox.Location = new System.Drawing.Point(314, 17);
             this.SourceAddressTextBox.Name = "SourceAddressTextBox";
-            this.SourceAddressTextBox.Size = new System.Drawing.Size(43, 20);
+            this.SourceAddressTextBox.Size = new System.Drawing.Size(37, 20);
             this.SourceAddressTextBox.TabIndex = 11;
             this.SourceAddressTextBox.Text = "0";
             this.SourceAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SourceAddressTextBox.TextChanged += new System.EventHandler(this.SourceAddressTextBox_TextChanged);
+            this.SourceAddressTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SourceAddressTextBox_KeyPress);
+            this.SourceAddressTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SourceAddressTextBox_MouseDown);
+            // 
+            // DistanitionAddressTextBox
+            // 
+            this.DistanitionAddressTextBox.Location = new System.Drawing.Point(314, 40);
+            this.DistanitionAddressTextBox.Name = "DistanitionAddressTextBox";
+            this.DistanitionAddressTextBox.Size = new System.Drawing.Size(37, 20);
+            this.DistanitionAddressTextBox.TabIndex = 11;
+            this.DistanitionAddressTextBox.Text = "0";
+            this.DistanitionAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.DistanitionAddressTextBox.TextChanged += new System.EventHandler(this.DistanitionAddressTextBox_TextChanged);
+            this.DistanitionAddressTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SourceAddressTextBox_KeyPress);
+            this.DistanitionAddressTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SourceAddressTextBox_MouseDown);
             // 
             // MainForm
             // 
@@ -292,6 +299,7 @@
             this.Name = "MainForm";
             this.Text = "COM-Port Tranciver";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Enter += new System.EventHandler(this.MainForm_Enter);
             this.inputGroupBox.ResumeLayout(false);
             this.inputGroupBox.PerformLayout();
             this.outputGroupBox.ResumeLayout(false);
@@ -325,9 +333,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox ErrorGenerationCheckBox;
         private System.Windows.Forms.TextBox SourceAddressTextBox;
         private System.Windows.Forms.TextBox DistanitionAddressTextBox;
-        private System.Windows.Forms.CheckBox ErrorGenerationCheckBox;
     }
 }
 

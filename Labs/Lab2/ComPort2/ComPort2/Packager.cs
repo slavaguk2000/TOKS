@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ComPort
 {
-    class Packager
+    public class Packager
     {
         private const byte flag = 10;
         private const byte ESC = 125;
@@ -17,14 +17,15 @@ namespace ComPort
         private const byte dataSize = 5;
         private const byte packageSize = headerSize + trailerSize + dataSize;
 
-        private byte distanitionAddress { get; set; }
-        private byte sourceAddress { get; set; }
-        private bool error = false;
+        public byte distanitionAddress { get; set; }
+        public byte sourceAddress { get; set; }
+        public bool error { get; set; }
 
-        public Packager(byte distanitionAddress, byte sourceAddress = 0)
+        public Packager(byte distanitionAddress, byte sourceAddress, bool error)
         {
             this.distanitionAddress = distanitionAddress;
             this.sourceAddress = sourceAddress;
+            this.error = error;
         }
 
         public string package(string data)

@@ -11,6 +11,7 @@ namespace ComPort
     class ComPortTransmitter
     {
         private const int timeout = 1000;
+        private const byte dataSize = 5;
         private Thread reciveThread;
         private SerialPort serialPort;
         private MainForm mainForm;
@@ -63,6 +64,23 @@ namespace ComPort
         {
             reciveThread.Abort();
             serialPort.Close();
+        }
+
+        private bool sendPackage(string data)
+        {
+            if (data.Length > dataSize) throw new Exception("Too large data");
+            return sendData(mainForm.packager.byteStaffing(mainForm.packager.package(data)));
+        }
+
+        public bool sendPackageData(string message)
+        {
+            for (int i = 0; i < message.Length; i+=dataSize)
+            {
+                if (!sendPackage(message.Substring(i, Math.Min(message.Length - i, dataSize)))) return false;
+            }
+            if (message.Length % dataSize == 0)
+                if (!sendPackage("")) return false;
+            return true;
         }
 
         public bool sendData(string message)

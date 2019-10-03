@@ -13,10 +13,10 @@ namespace ComPort
 {
     public partial class MainForm : Form
     {
-        ComPortTransmitter transmitter;
-        string oldSource = "0";
-        string oldDistanition = "0";
-        Packager packager;
+        private ComPortTransmitter transmitter;
+        private string oldSource = "0";
+        private string oldDistanition = "0";
+        public Packager packager;
 
         private void updateCompPortComboBox()
         {
@@ -26,9 +26,17 @@ namespace ComPort
 
         public MainForm()
         {
+            string a = "23456sas";
+            string b = a.Substring(1, a.Length - 1 < 4? a.Length - 1:4);
             InitializeComponent();
             updateCompPortComboBox();
             FormClosing += MainForm_FormClosing;
+            packager = new Packager((byte)int.Parse(DistanitionAddressTextBox.Text), (byte)int.Parse(SourceAddressTextBox.Text), ErrorGenerationCheckBox.Checked);
+        }
+
+        private void MainForm_FormClosing(object sender, EventArgs e)
+        {
+            transmitter?.close();
         }
 
         public bool getChecked()
@@ -114,27 +122,6 @@ namespace ComPort
             controlLabel.BeginInvoke((MethodInvoker)(delegate { controlLabel.Text += message + "\n"; }));
         }
 
-        private void ComPortComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox comPortsComboBox = (ComboBox)sender;
-            if (transmitter != null)
-            {
-                transmitter.DataRecived -= Transmitter_DataRecived;
-                transmitter.close();
-            }
-            if (comPortsComboBox.SelectedIndex == -1) return;
-            try
-            {
-                transmitter = new ComPortTransmitter(comPortsComboBox.SelectedItem.ToString(), this);
-            }catch(Exception ex)
-            {
-                comPortsComboBox.SelectedIndex = -1;
-                MessageBox.Show("Can't open this port. Please try another.", "ERROR!!!!!!");               
-                return;
-            }
-            transmitter.DataRecived += Transmitter_DataRecived;
-        }
-
         private void Transmitter_DataRecived(string message)
         {
             addOutputString(message);
@@ -143,11 +130,6 @@ namespace ComPort
         private void ComPortComboBox_DropDown(object sender, EventArgs e)
         {
             updateCompPortComboBox();
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
 
         private string oldPort = "";
@@ -184,11 +166,6 @@ namespace ComPort
 
         }
 
-        private void MainForm_FormClosing(object sender, EventArgs e)
-        {
-            transmitter?.close();
-        }
-
         private void ComPortComboBox_DropDown_1(object sender, EventArgs e)
         {
             updateCompPortComboBox();
@@ -207,15 +184,64 @@ namespace ComPort
 
         }
 
+        private void checkAddressTextBox(TextBox textBox, bool source)
+        {
+            int newAddress;
+            if (int.TryParse(textBox.Text, out newAddress))
+            {
+                if (newAddress > 255) newAddress = 255;
+                if (newAddress < 0) newAddress = 0;
+                if (source) packager.sourceAddress = (byte)newAddress;
+                else packager.distanitionAddress = (byte)newAddress;
+            }
+            else
+            {
+                if (source) textBox.Text = oldSource;
+                else textBox.Text = oldDistanition;
+            }
+        }
+
         private void SourceAddressTextBox_TextChanged(object sender, EventArgs e)
         {
-            TextBox sourceTextBox = (TextBox)sender;
-            int newSource;
-            if (int.TryParse(sourceTextBox.Text, out newSource))
-            {
-                
-            }
+            checkAddressTextBox((TextBox)sender, true);            
+        }
+
+        private void DistanitionAddressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            checkAddressTextBox((TextBox)sender, false);
+        }
+
+        private void MainForm_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SourceAddressTextBox_Enter(object sender, EventArgs e)
+        {
             
+        }
+
+        private void SourceAddressTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
+
+        private void SourceAddressTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r')
+            {
+                ActiveControl = null;
+            }
+        }
+
+        private void controlGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ErrorGenerationCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            packager.error = ((CheckBox)sender).Checked;
         }
     }
 }
