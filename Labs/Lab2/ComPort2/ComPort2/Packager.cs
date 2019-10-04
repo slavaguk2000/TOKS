@@ -44,8 +44,9 @@ namespace ComPort
 
         public string unpackage(string message)
         {
-            if (message.Length != packageSize || message[0] != flag) throw new FormatException("Invalid message");
-            if (message[1] != sourceAddress) throw new Exception("Invalid address");
+            if (message.Length < packageSize) throw new Exception("Too little message");
+            if (message.Length > packageSize || message[0] != flag) throw new FormatException("Invalid message");
+            if (message[1] != sourceAddress) throw new FormatException("Invalid address");
             if (message[headerSize + dataSize] == 1) throw new InvalidProgramException("Error message");
             return message.Substring(headerSize, dataSize);
         }
@@ -55,7 +56,7 @@ namespace ComPort
             string staffMessage = "";
             if (message.Length != packageSize || message[0] != flag) throw new Exception("Invalid message");
             staffMessage += flag;
-            foreach (byte symbol in message.Substring(1))
+            foreach (char symbol in message.Substring(1))
             {
                 if (symbol == flag)
                 {
@@ -68,14 +69,17 @@ namespace ComPort
             return staffMessage;
         }
 
-        public string unByteStaffing(string staffMessage)
+        public string unByteStaffing(string staffMessage, out int length)
         {
             string message = "";
-            if (staffMessage.Length < packageSize || staffMessage[0] != flag) throw new FormatException("Invalid message");
+            if (staffMessage.Length < packageSize) throw new FormatException("Too little message to unByteStaffing");
+            if (staffMessage[0] != flag) throw new FormatException("Invalid message");
             message += flag;
             bool esc = false;
+            length = 1;
             foreach (char symbol in staffMessage.Substring(1))
             {
+                if (symbol == flag) break;
                 if (esc)
                 {
                     switch (symbol)
@@ -94,6 +98,7 @@ namespace ComPort
                 else if (symbol == ESC)
                     esc = true;
                 else message += symbol;
+                length++;
             }
             return message;
         }

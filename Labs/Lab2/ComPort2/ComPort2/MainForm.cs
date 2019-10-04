@@ -94,19 +94,29 @@ namespace ComPort
             
         }
 
+        private void clearInput()
+        {
+            inputTextBox.Text = string.Empty;
+        }
+
         private void inputTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if(e.KeyChar == '\r')
             {
-                if(transmitter == null)
+                TextBox inputTextBox = (TextBox)sender;
+                string input = inputTextBox.Text;
+                if (SourceAddressTextBox.Text == DistanitionAddressTextBox.Text)
+                {
+                    addOutputString(input);
+                    clearInput();
+                }
+                if (transmitter == null)
                 {
                     MessageBox.Show("Choose COM-Port please", "ERROR!!!");
                     return;
-                }
-                TextBox inputTextBox = (TextBox)sender;
-
-                if(transmitter.sendData(inputTextBox.Text))
-                    inputTextBox.Text = string.Empty;
+                }                
+                if (transmitter.sendPackageData(input))
+                    clearInput();
             }            
         }
 
@@ -189,6 +199,7 @@ namespace ComPort
             {
                 if (newAddress > 255) newAddress = 255;
                 if (newAddress < 0) newAddress = 0;
+                textBox.Text = "" + newAddress;
                 if (source) packager.sourceAddress = (char)newAddress;
                 else packager.distanitionAddress = (char)newAddress;
             }

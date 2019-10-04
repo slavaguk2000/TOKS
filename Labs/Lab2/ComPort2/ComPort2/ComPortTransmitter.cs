@@ -72,7 +72,12 @@ namespace ComPort
         private bool sendPackage(string data)
         {
             if (data.Length > dataSize) throw new Exception("Too large data");
-            return sendData(mainForm.packager.byteStaffing(mainForm.packager.package(data)));
+            string package = mainForm.packager.byteStaffing(mainForm.packager.package(data));
+            byte[] packageByteArray = new byte[package.Length];
+            for (int i = 0; i < package.Length; i++)
+                packageByteArray[i] = (byte)package[i];
+            mainForm.addControlDebugString(BitConverter.ToString(packageByteArray));
+            return sendData(package);
         }
 
         public bool sendPackageData(string message)
@@ -113,54 +118,68 @@ namespace ComPort
             timerIsStart = false;
         }
 
+        private void skipSymbol()
+        {
+            if (recivingMessage.Length > 0) recivingMessage = recivingMessage.Substring(1);
+            if (recivingMessage.Length > 0) parcePackage();
+        }
+
         private void parcePackage()
         {
             try
             {
-                string message = mainForm.packager.unpackage(mainForm.packager.unByteStaffing(recivingMessage));
-                if(message.Length == 5)
+                int length;
+                string message = mainForm.packager.unpackage(mainForm.packager.unByteStaffing(recivingMessage, out length));
+                if (message.Length == 5)
                 {
-                    endRecivingMessage
+                    endRecivingMessage += message;
+                    if (endRecivingMessage.Contains("\0"))
+                    {
+                        endRecivingMessage = endRecivingMessage.Split(new char[] { '\0' })[0];
+                        printMessage();
+                    }
+                    else recivingMessage = recivingMessage.Substring(length);
+                    if (recivingMessage.Length > 0) parcePackage();
                 }
             }
             catch (FormatException)
             {
-                recivingMessage = "";
+                skipSymbol();
             }
             catch (InvalidProgramException)
             {
-                recivingMessage = "";
-                mainForm.addControlDebugString("Got error message");
+                skipSymbol();
+                mainForm.addControlDebugString("Got error package");
             }
             catch (Exception) { }
         }
 
         private void printMessage()
         {
-            mainForm.addOutputString(recivingMessage);
+            mainForm.addOutputString(endRecivingMessage);
             mainForm.addControlDebugString("message was got");
-            recivingMessage = "";
             endRecivingMessage = "";
+            skipSymbol();            
         }
 
         private void reciveChar()
         {
             try
             {
-                char recived = (char)serialPort.ReadChar();
+                char recived = (char)serialPort.ReadByte();
                 mainForm.addControlDebugString("char was got");
                 if (recived == Packager.flag || recivingMessage.Length > 0) recivingMessage += recived;
-                else if (recivingMessage.Length >= Packager.packageSize) parcePackage();
+                if (recivingMessage.Length >= Packager.packageSize) parcePackage();
             }
             catch (TimeoutException)
             {
-                recivingMessage = "";
+                skipSymbol();
                 endRecivingMessage = "";
                 mainForm.addControlDebugString("read char timeout");
             }
             catch (Exception)
             {
-                recivingMessage = "";
+                skipSymbol();
                 endRecivingMessage = "";
                 mainForm.addControlDebugString("read char error");
             }
@@ -280,17 +299,17 @@ namespace ComPort
 
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string message = serialPort.ReadLine();
-            DataRecived?.Invoke(message);
-            mainForm.addOutputString(message);
-            mainForm.addControlDebugString("message was got");
+            while(serialPort.BytesToRead > 0)
+                recivingMessage += (char)serialPort.ReadByte();
+            mainForm.addControlDebugString("package was got");
+            parcePackage();            
         }
 
         private void sendChar(char a)
         {
             try
             {
-                serialPort.Write(new char[] { a }, 0, 1);
+                serialPort.Write(new byte[] { (byte)a }, 0, 1);
                 mainForm.addControlDebugString("char was sent");
             }
             catch (TimeoutException)
@@ -397,27 +416,12 @@ namespace ComPort
                 return false;
             }
         }
-
-        private void sendEndOfMessage()
-        {
-            try
-            {
-                if (isRTS) sendRTSCheckedData('\0');
-                else sendDTRCheckedData('\0');
-                mainForm.addControlDebugString("message was sent");
-            }
-            catch (SendException e)
-            {
-                mainForm.addControlDebugString("message wasn't sent");
-            }
-        }
-
+        
         private bool checkedSendData(string message)
         {
             if (!isChanelFree()) return false;
             inSendProcess = true;
             bool answer = sendMessageForBytes(message);
-            sendEndOfMessage();
             inSendProcess = false;
             return answer;
         }
@@ -426,9 +430,10 @@ namespace ComPort
         {
             try
             {
-                serialPort.WriteLine(message);
+                foreach (byte b in message)
+                    serialPort.Write(new byte[] { b }, 0, 1);
                 while (serialPort.BytesToWrite > 0) ;
-                mainForm.addControlDebugString("message was sent");
+                mainForm.addControlDebugString("package was sent");
                 return true;
             }
             catch (Exception ex)
