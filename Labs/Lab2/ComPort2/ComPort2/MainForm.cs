@@ -110,13 +110,16 @@ namespace ComPort
                     addOutputString(input);
                     clearInput();
                 }
-                if (transmitter == null)
+                else
                 {
-                    MessageBox.Show("Choose COM-Port please", "ERROR!!!");
-                    return;
-                }                
-                if (transmitter.sendPackageData(input))
-                    clearInput();
+                    if (transmitter == null)
+                    {
+                        MessageBox.Show("Choose COM-Port please", "ERROR!!!");
+                        return;
+                    }
+                    if (transmitter.sendPackageData(input))
+                        clearInput();
+                }
             }            
         }
 
