@@ -72,7 +72,7 @@ namespace ComPort
         public string unByteStaffing(string staffMessage, out int length)
         {
             string message = "";
-            if (staffMessage.Length < packageSize) throw new FormatException("Too little message to unByteStaffing");
+            if (staffMessage.Length < packageSize) throw new Exception("Too little message to unByteStaffing");
             if (staffMessage[0] != flag) throw new FormatException("Invalid message");
             message += flag;
             bool esc = false;
