@@ -91,11 +91,11 @@ namespace ComPort
                 if(isEven(i,newBitMessage)) error += (int)Math.Pow(2, i - 1);
             if (error > 0)
             {
-                form.addControlDebugString("Message was got with error in bit with number: " + error);
+                form.addControlDebugString("Package was got with error in bit with number: " + error);
                 error--;
                 if (error < newBitMessage.Length)
                 {
-                    form.addControlDebugString("Message was corrected");
+                    form.addControlDebugString("Package was corrected");
                     newBitMessage[error] = !newBitMessage[error];
                 }
             }
