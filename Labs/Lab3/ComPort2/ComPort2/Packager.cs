@@ -38,7 +38,7 @@ namespace ComPort
             message += data;
             for (int i = data.Length; i < dataSize; i++)
                 message += '\0';
-            message += (char)(error ? 1 : 0);
+            message += '\0';
             return message;
         }
 
@@ -54,7 +54,8 @@ namespace ComPort
         public string byteStaffing(string message)
         {
             string staffMessage = "";
-            if (message.Length != packageSize || message[0] != flag) throw new Exception("Invalid message");
+            if (message.Length != packageSize) throw new Exception("Invalid message");
+            if (message[0] != flag) throw new Exception("Invalid flag");
             staffMessage += flag;
             foreach (char symbol in message.Substring(1))
             {

@@ -105,6 +105,12 @@ namespace ComPort
             {
                 TextBox inputTextBox = (TextBox)sender;
                 string input = inputTextBox.Text;
+                foreach (char a in input)
+                    if (a > 127 || a < 0)
+                    {
+                        MessageBox.Show("You can use only standart symbols.", "Error");
+                        return;
+                    }
                 if (SourceAddressTextBox.Text == DistanitionAddressTextBox.Text)
                 {
                     addOutputString(input);
@@ -112,13 +118,20 @@ namespace ComPort
                 }
                 else
                 {
-                    if (transmitter == null)
+                    try
                     {
-                        MessageBox.Show("Choose COM-Port please", "ERROR!!!");
-                        return;
+                        if (transmitter == null)
+                        {
+                            MessageBox.Show("Choose COM-Port please", "ERROR!!!");
+                            return;
+                        }
+                        if (transmitter.sendPackageData(input))
+                            clearInput();
                     }
-                    if (transmitter.sendPackageData(input))
-                        clearInput();
+                    catch(Exception ex)
+                    {
+                        addControlDebugString("Error sending: " + ex.Message);
+                    }
                 }
             }            
         }

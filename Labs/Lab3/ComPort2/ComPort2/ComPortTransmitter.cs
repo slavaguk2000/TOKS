@@ -15,6 +15,7 @@ namespace ComPort
         private Thread reciveThread;
         private SerialPort serialPort;
         private MainForm mainForm;
+        private HamingCoder hamingCoder;
         private bool timerIsStart;
         private bool isRTS, isChecked;
         string recivingMessage;
@@ -31,6 +32,7 @@ namespace ComPort
             serialPort = new SerialPort(port, 9600, Parity.None, 8, StopBits.One);
             serialPort.Open();
             reciveThread = new Thread(new ThreadStart(reciverLoop));
+            hamingCoder = new HamingCoder(mainForm);
             isRTS = mainForm.isRTS();
             setChecked(mainForm.getChecked());
             recivingMessage = "";
@@ -72,7 +74,7 @@ namespace ComPort
         private bool sendPackage(string data)
         {
             if (data.Length > dataSize) throw new Exception("Too large data");
-            string package = mainForm.packager.byteStaffing(mainForm.packager.package(data));
+            string package = mainForm.packager.byteStaffing(hamingCoder.coder(mainForm.packager.package(data), mainForm.packager.error));
             byte[] packageByteArray = new byte[package.Length];
             for (int i = 0; i < package.Length; i++)
                 packageByteArray[i] = (byte)package[i];
@@ -82,9 +84,16 @@ namespace ComPort
 
         public bool sendPackageData(string message)
         {
-            for (int i = 0; i < message.Length; i+=dataSize)
+            for (int i = 0; i < message.Length; i += dataSize)
             {
-                if (!sendPackage(message.Substring(i, Math.Min(message.Length - i, dataSize)))) return false;
+                try
+                {
+                    if (!sendPackage(message.Substring(i, Math.Min(message.Length - i, dataSize)))) return false;
+                }
+                catch(Exception ex)
+                {
+                    mainForm.addControlDebugString("Error in sending package: " + ex.Message);
+                }
             }
             if (message.Length % dataSize == 0)
                 if (!sendPackage("")) return false;
@@ -129,7 +138,7 @@ namespace ComPort
             try
             {
                 int length;
-                string message = mainForm.packager.unpackage(mainForm.packager.unByteStaffing(recivingMessage, out length));
+                string message = mainForm.packager.unpackage(hamingCoder.decoder(mainForm.packager.unByteStaffing(recivingMessage, out length)));
                 if (message.Length == 5)
                 {
                     endRecivingMessage += message;

@@ -9,9 +9,11 @@ namespace ComPort
     class HamingCoder
     {
         MainForm form;
+        Random random;
         public HamingCoder(MainForm form)
         {
             this.form = form;
+            random = new Random();
         }
         private string byteToString(byte[] byteArray)
         {
@@ -43,28 +45,34 @@ namespace ComPort
             }
             return count % 2 != 0;
         }
-        public string coder(string message, bool createError)
+
+        private void initHammingFormatArray(ref BitArray source, ref BitArray distanition)
         {
-            BitArray bitMessage = new BitArray(stringToByte(message));
-            BitArray newBitMessage = new BitArray(bitMessage.Length);
-            for (int i = 0, j = 0; i < newBitMessage.Length; i++, j++)
+            for (int i = 0, j = 0; i < distanition.Length; i++, j++)
             {
                 if (Math.Pow(2, (int)Math.Log(i + 1, 2)) == i + 1)
                 {
                     j--;
                     continue;
                 }
-                newBitMessage[i] = bitMessage[j];
+                distanition[i] = source[j];
             }
+        }
+        public string coder(string message, bool createError)
+        {
+            BitArray bitMessage = new BitArray(stringToByte(message));
+            BitArray newBitMessage = new BitArray(bitMessage.Length);
+            initHammingFormatArray(ref bitMessage, ref newBitMessage);
             for (int i = 1; i <= Math.Log(newBitMessage.Length, 2) + 1; i++)
-                newBitMessage[(int)Math.Pow(2, i - 1) - 1] = isEven(i, newBitMessage);
+                bitMessage[8*8 + i- 1] = isEven(i, newBitMessage);
+                //bitMessage[(int)Math.Pow(2, i - 1) - 1] = isEven(i, newBitMessage);
             if (createError) 
             { 
-                int num = (new Random()).Next(newBitMessage.Length);
-                newBitMessage[num] = !newBitMessage[num];
+                int num = random.Next(bitMessage.Length);
+                bitMessage[num] = !bitMessage[num];
             }
             byte[] array = new byte[message.Length];
-            newBitMessage.CopyTo(array, 0);
+            bitMessage.CopyTo(array, 0);
             return byteToString(array);
         }
 
@@ -72,30 +80,37 @@ namespace ComPort
         {
             int error = 0;
             BitArray bitMessage = new BitArray(stringToByte(message));
-            for (int i = 1; i <= Math.Log(bitMessage.Length, 2) + 1; i++)
-                if(isEven(i,bitMessage)) error += (int)Math.Pow(2, i - 1);
+            BitArray newBitMessage = new BitArray(bitMessage.Length);
+            for (int i = 1; i <= Math.Log(newBitMessage.Length, 2) + 1; i++)
+            {
+                newBitMessage[(int)Math.Pow(2, i - 1) - 1] = bitMessage[8 * 8 + i - 1];
+                bitMessage[8 * 8 + i - 1] = false;
+            }
+            initHammingFormatArray(ref bitMessage, ref newBitMessage);
+            for (int i = 1; i <= Math.Log(newBitMessage.Length, 2) + 1; i++)
+                if(isEven(i,newBitMessage)) error += (int)Math.Pow(2, i - 1);
             if (error > 0)
             {
                 form.addControlDebugString("Message was got with error in bit with number: " + error);
                 error--;
-                if (error < bitMessage.Length)
+                if (error < newBitMessage.Length)
                 {
                     form.addControlDebugString("Message was corrected");
-                    bitMessage[error] = !bitMessage[error];
+                    newBitMessage[error] = !newBitMessage[error];
                 }
             }
-            BitArray newBitMessage = new BitArray(bitMessage.Length);
-            for (int i = 0, j = 0; i < bitMessage.Length; i++, j++)
+            BitArray endBitMessage = new BitArray(newBitMessage.Length);
+            for (int i = 0, j = 0; i < newBitMessage.Length; i++, j++)
             {
                 if (Math.Pow(2, (int)Math.Log(i + 1, 2)) == i + 1)
                 {
                     j--;
                     continue;
                 }
-                newBitMessage[j] = bitMessage[i];
+                endBitMessage[j] = newBitMessage[i];
             }            
             byte[] array = new byte[message.Length];
-            newBitMessage.CopyTo(array, 0);
+            endBitMessage.CopyTo(array, 0);
             return byteToString(array);
         }
     }

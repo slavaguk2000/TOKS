@@ -14,7 +14,6 @@ namespace ComPort
         [STAThread]
         static void Main()
         {
-            HamingCoder.decoder(HamingCoder.coder("hello\0"));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
