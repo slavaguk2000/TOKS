@@ -25,11 +25,12 @@ namespace ComPort
         {
             addControlDebugSymbol('{');//MY ADDING!!!!!!!!!!!!!!!!!!!!
             for (int i = 0; i < attemptCount; i++)
-            { 
-                if(checkCollision())
+            {
+                long ticks = carrierSense();
+                if(collisionDetect(ticks))
                 {
                     addControlDebugSymbol('X');
-                    waitCollisionWindow();
+                    waitNextAttempt(i);
                 }
                 else
                 {
@@ -40,20 +41,32 @@ namespace ComPort
                 }                
             }
             addControlDebugSymbol('\n');
+            waitCollisionWindow();//Для визуального отображения
             //TODO : write error
         }
 
-        private void waitCollisionWindow()
+        private long carrierSense()
         {
-            //50000см/(15..20)см/нс = 3000нс = 30 ticks (длина сегмента - 500м)
-            var startTicks = DateTime.UtcNow.Ticks;
-            while (DateTime.UtcNow.Ticks < startTicks + 12453) ;
-            //while (DateTime.UtcNow.Ticks < startTicks + 30) ;
+            return DateTime.UtcNow.Ticks;
         }
 
-        private bool checkCollision()
+        private void delay(int ticks)
         {
-            if (((DateTime.UtcNow.Ticks / 100 % 31)* (DateTime.UtcNow.Ticks / 100 % 17)) % 4 == 2) //1 tick = 100 nanoseconds = 0.1 microseconds
+            var startTicks = DateTime.UtcNow.Ticks;
+            while (DateTime.UtcNow.Ticks < startTicks + ticks);
+        }
+        private void waitNextAttempt(int n)
+        {
+            Random r = new Random();
+            delay(30*r.Next(0, Convert.ToInt32(Math.Pow(2, n))));            
+        }
+        private void waitCollisionWindow()
+        {
+            delay(1234);
+        }
+        private bool collisionDetect(long ticks)
+        {
+            if (((ticks / 100 % 31)* (ticks / 100 % 17)) % 3 == 0) //1 tick = 100 nanoseconds = 0.1 microseconds
                 return false;
             return true;
         }
@@ -84,27 +97,44 @@ namespace ComPort
         {
             controlLabel.BeginInvoke((MethodInvoker)(delegate { controlLabel.Text += message; }));
         }
+        private void errorMes(string message)
+        {
+            MessageBox.Show(message, "ERROR");
+            throw new FormatException("");
+        }
+        private void checkAttemptCount(object sender)
+        {
+            TextBox number = (TextBox)sender;
+            try
+            {
+                attemptCount = int.Parse(number.Text);
+                if (attemptCount > 10)
+                {
+                    errorMes("Too large count of attempt(max = 10)");
+                }
+                if (attemptCount < 1)
+                {
+                    errorMes("Too small count of attempt(min = 1)");
+                }
+            }
+            catch (FormatException)
+            {
+                number.Text = "10";
+                attemptCount = 10;
+            }
+            ActiveControl = null;
+        }
         private void attemptCountTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\r')
             {
-                TextBox number = (TextBox)sender;
-                try
-                {
-                    attemptCount = int.Parse(number.Text);
-                    if (attemptCount > 10)
-                    {
-                        MessageBox.Show("Too large count of attempt(max = 10)", "ERROR");
-                        throw new FormatException("");
-                    }
-                }
-                catch (FormatException)
-                {
-                    number.Text = "10";
-                    attemptCount = 10;
-                }
-                ActiveControl = null;
+                checkAttemptCount(sender);   
             }
+        }
+
+        private void attemptCountTextBox_Leave(object sender, EventArgs e)
+        {
+            checkAttemptCount(sender);
         }
     }
 }
