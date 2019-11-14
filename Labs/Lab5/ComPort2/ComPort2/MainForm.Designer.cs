@@ -34,20 +34,21 @@
             this.outputPanel1 = new System.Windows.Forms.Panel();
             this.outputLabel = new System.Windows.Forms.Label();
             this.controlGroupBox = new System.Windows.Forms.GroupBox();
+            this.package1 = new System.Windows.Forms.Label();
+            this.Station1Token = new System.Windows.Forms.Label();
+            this.destinationAddress1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.holdTimeButton = new System.Windows.Forms.TextBox();
-            this.distanationAddress1 = new System.Windows.Forms.ComboBox();
-            this.startButton = new System.Windows.Forms.Button();
+            this.holdTimeCheckBox = new System.Windows.Forms.CheckBox();
             this.monitorToken = new System.Windows.Forms.Label();
-            this.Station1Token = new System.Windows.Forms.Label();
-            this.holdTimeCheck = new System.Windows.Forms.CheckBox();
+            this.startButton = new System.Windows.Forms.Button();
+            this.holdTimeTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.Station2Token = new System.Windows.Forms.Label();
-            this.distanationAddress2 = new System.Windows.Forms.ComboBox();
+            this.destinationAddress2 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.inputTextBox2 = new System.Windows.Forms.TextBox();
@@ -57,13 +58,16 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.Station3Token = new System.Windows.Forms.Label();
-            this.distanationAddress3 = new System.Windows.Forms.ComboBox();
+            this.destinationAddress3 = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.inputTextBox3 = new System.Windows.Forms.TextBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.outputPanel3 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
+            this.package2 = new System.Windows.Forms.Label();
+            this.package3 = new System.Windows.Forms.Label();
+            this.packageMonitor = new System.Windows.Forms.Label();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.outputPanel1.SuspendLayout();
@@ -103,6 +107,7 @@
             this.inputTextBox1.Name = "inputTextBox1";
             this.inputTextBox1.Size = new System.Drawing.Size(199, 27);
             this.inputTextBox1.TabIndex = 5;
+            this.inputTextBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.inputTextBox_KeyPress);
             // 
             // outputGroupBox
             // 
@@ -140,99 +145,25 @@
             this.controlGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.controlGroupBox.Controls.Add(this.package1);
             this.controlGroupBox.Controls.Add(this.Station1Token);
-            this.controlGroupBox.Controls.Add(this.distanationAddress1);
+            this.controlGroupBox.Controls.Add(this.destinationAddress1);
             this.controlGroupBox.Controls.Add(this.label1);
             this.controlGroupBox.Location = new System.Drawing.Point(6, 179);
             this.controlGroupBox.Name = "controlGroupBox";
-            this.controlGroupBox.Size = new System.Drawing.Size(202, 47);
+            this.controlGroupBox.Size = new System.Drawing.Size(202, 58);
             this.controlGroupBox.TabIndex = 0;
             this.controlGroupBox.TabStop = false;
             this.controlGroupBox.Text = "Control && Debug";
             // 
-            // label1
+            // package1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Distanation address:";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.controlGroupBox);
-            this.groupBox2.Controls.Add(this.inputGroupBox);
-            this.groupBox2.Controls.Add(this.outputGroupBox);
-            this.groupBox2.Location = new System.Drawing.Point(12, 255);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(217, 232);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Station 1";
-            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.groupBox4);
-            this.groupBox3.Location = new System.Drawing.Point(268, 474);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(174, 97);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Monitor";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox4.Controls.Add(this.holdTimeCheck);
-            this.groupBox4.Controls.Add(this.monitorToken);
-            this.groupBox4.Controls.Add(this.startButton);
-            this.groupBox4.Controls.Add(this.holdTimeButton);
-            this.groupBox4.Location = new System.Drawing.Point(6, 19);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(162, 72);
-            this.groupBox4.TabIndex = 0;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Control && Debug";
-            // 
-            // holdTimeButton
-            // 
-            this.holdTimeButton.Location = new System.Drawing.Point(135, 42);
-            this.holdTimeButton.Name = "holdTimeButton";
-            this.holdTimeButton.Size = new System.Drawing.Size(22, 20);
-            this.holdTimeButton.TabIndex = 11;
-            this.holdTimeButton.Text = "10";
-            this.holdTimeButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // distanationAddress1
-            // 
-            this.distanationAddress1.FormattingEnabled = true;
-            this.distanationAddress1.Location = new System.Drawing.Point(122, 17);
-            this.distanationAddress1.Name = "distanationAddress1";
-            this.distanationAddress1.Size = new System.Drawing.Size(46, 21);
-            this.distanationAddress1.TabIndex = 10;
-            // 
-            // startButton
-            // 
-            this.startButton.Location = new System.Drawing.Point(7, 14);
-            this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(50, 23);
-            this.startButton.TabIndex = 12;
-            this.startButton.Text = "Start";
-            this.startButton.UseVisualStyleBackColor = true;
-            // 
-            // monitorToken
-            // 
-            this.monitorToken.AutoSize = true;
-            this.monitorToken.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.monitorToken.Location = new System.Drawing.Point(59, 14);
-            this.monitorToken.Name = "monitorToken";
-            this.monitorToken.Size = new System.Drawing.Size(20, 25);
-            this.monitorToken.TabIndex = 13;
-            this.monitorToken.Text = "*";
+            this.package1.AutoSize = true;
+            this.package1.Location = new System.Drawing.Point(13, 40);
+            this.package1.Name = "package1";
+            this.package1.Size = new System.Drawing.Size(35, 13);
+            this.package1.TabIndex = 14;
+            this.package1.Text = "label2";
             // 
             // Station1Token
             // 
@@ -244,15 +175,101 @@
             this.Station1Token.TabIndex = 13;
             this.Station1Token.Text = "*";
             // 
-            // holdTimeCheck
+            // destinationAddress1
             // 
-            this.holdTimeCheck.AutoSize = true;
-            this.holdTimeCheck.Location = new System.Drawing.Point(7, 44);
-            this.holdTimeCheck.Name = "holdTimeCheck";
-            this.holdTimeCheck.Size = new System.Drawing.Size(122, 17);
-            this.holdTimeCheck.TabIndex = 14;
-            this.holdTimeCheck.Text = "Hold time (seconds):";
-            this.holdTimeCheck.UseVisualStyleBackColor = true;
+            this.destinationAddress1.FormattingEnabled = true;
+            this.destinationAddress1.Location = new System.Drawing.Point(122, 17);
+            this.destinationAddress1.Name = "destinationAddress1";
+            this.destinationAddress1.Size = new System.Drawing.Size(46, 21);
+            this.destinationAddress1.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "destination address:";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.controlGroupBox);
+            this.groupBox2.Controls.Add(this.inputGroupBox);
+            this.groupBox2.Controls.Add(this.outputGroupBox);
+            this.groupBox2.Location = new System.Drawing.Point(12, 255);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(217, 243);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Station 1";
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.groupBox4);
+            this.groupBox3.Location = new System.Drawing.Point(268, 462);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(174, 108);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Monitor";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.packageMonitor);
+            this.groupBox4.Controls.Add(this.holdTimeCheckBox);
+            this.groupBox4.Controls.Add(this.monitorToken);
+            this.groupBox4.Controls.Add(this.startButton);
+            this.groupBox4.Controls.Add(this.holdTimeTextBox);
+            this.groupBox4.Location = new System.Drawing.Point(6, 19);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(162, 83);
+            this.groupBox4.TabIndex = 0;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Control && Debug";
+            // 
+            // holdTimeCheckBox
+            // 
+            this.holdTimeCheckBox.AutoSize = true;
+            this.holdTimeCheckBox.Location = new System.Drawing.Point(7, 44);
+            this.holdTimeCheckBox.Name = "holdTimeCheckBox";
+            this.holdTimeCheckBox.Size = new System.Drawing.Size(122, 17);
+            this.holdTimeCheckBox.TabIndex = 14;
+            this.holdTimeCheckBox.Text = "Hold time (seconds):";
+            this.holdTimeCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // monitorToken
+            // 
+            this.monitorToken.AutoSize = true;
+            this.monitorToken.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.monitorToken.Location = new System.Drawing.Point(59, 14);
+            this.monitorToken.Name = "monitorToken";
+            this.monitorToken.Size = new System.Drawing.Size(20, 25);
+            this.monitorToken.TabIndex = 13;
+            this.monitorToken.Text = "*";
+            // 
+            // startButton
+            // 
+            this.startButton.Location = new System.Drawing.Point(7, 14);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(50, 23);
+            this.startButton.TabIndex = 12;
+            this.startButton.Text = "Start";
+            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            // 
+            // holdTimeTextBox
+            // 
+            this.holdTimeTextBox.Location = new System.Drawing.Point(135, 42);
+            this.holdTimeTextBox.Name = "holdTimeTextBox";
+            this.holdTimeTextBox.Size = new System.Drawing.Size(22, 20);
+            this.holdTimeTextBox.TabIndex = 11;
+            this.holdTimeTextBox.Text = "10";
+            this.holdTimeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBox1
             // 
@@ -261,7 +278,7 @@
             this.groupBox1.Controls.Add(this.groupBox7);
             this.groupBox1.Location = new System.Drawing.Point(246, 33);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(217, 232);
+            this.groupBox1.Size = new System.Drawing.Size(217, 248);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Station 2";
@@ -272,12 +289,13 @@
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.package2);
             this.groupBox5.Controls.Add(this.Station2Token);
-            this.groupBox5.Controls.Add(this.distanationAddress2);
+            this.groupBox5.Controls.Add(this.destinationAddress2);
             this.groupBox5.Controls.Add(this.label3);
             this.groupBox5.Location = new System.Drawing.Point(6, 179);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(202, 47);
+            this.groupBox5.Size = new System.Drawing.Size(202, 63);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Control && Debug";
@@ -292,22 +310,22 @@
             this.Station2Token.TabIndex = 13;
             this.Station2Token.Text = "*";
             // 
-            // distanationAddress2
+            // destinationAddress2
             // 
-            this.distanationAddress2.FormattingEnabled = true;
-            this.distanationAddress2.Location = new System.Drawing.Point(122, 17);
-            this.distanationAddress2.Name = "distanationAddress2";
-            this.distanationAddress2.Size = new System.Drawing.Size(46, 21);
-            this.distanationAddress2.TabIndex = 10;
+            this.destinationAddress2.FormattingEnabled = true;
+            this.destinationAddress2.Location = new System.Drawing.Point(122, 17);
+            this.destinationAddress2.Name = "destinationAddress2";
+            this.destinationAddress2.Size = new System.Drawing.Size(46, 21);
+            this.destinationAddress2.TabIndex = 10;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(13, 20);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(103, 13);
+            this.label3.Size = new System.Drawing.Size(101, 13);
             this.label3.TabIndex = 9;
-            this.label3.Text = "Distanation address:";
+            this.label3.Text = "destination address:";
             // 
             // groupBox6
             // 
@@ -329,6 +347,7 @@
             this.inputTextBox2.Name = "inputTextBox2";
             this.inputTextBox2.Size = new System.Drawing.Size(199, 27);
             this.inputTextBox2.TabIndex = 5;
+            this.inputTextBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.inputTextBox_KeyPress);
             // 
             // groupBox7
             // 
@@ -368,7 +387,7 @@
             this.groupBox8.Controls.Add(this.groupBox11);
             this.groupBox8.Location = new System.Drawing.Point(477, 255);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(217, 232);
+            this.groupBox8.Size = new System.Drawing.Size(217, 248);
             this.groupBox8.TabIndex = 1;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Station 3";
@@ -379,12 +398,13 @@
             this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox9.Controls.Add(this.package3);
             this.groupBox9.Controls.Add(this.Station3Token);
-            this.groupBox9.Controls.Add(this.distanationAddress3);
+            this.groupBox9.Controls.Add(this.destinationAddress3);
             this.groupBox9.Controls.Add(this.label6);
             this.groupBox9.Location = new System.Drawing.Point(6, 179);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(202, 47);
+            this.groupBox9.Size = new System.Drawing.Size(202, 63);
             this.groupBox9.TabIndex = 0;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Control && Debug";
@@ -399,22 +419,22 @@
             this.Station3Token.TabIndex = 13;
             this.Station3Token.Text = "*";
             // 
-            // distanationAddress3
+            // destinationAddress3
             // 
-            this.distanationAddress3.FormattingEnabled = true;
-            this.distanationAddress3.Location = new System.Drawing.Point(122, 17);
-            this.distanationAddress3.Name = "distanationAddress3";
-            this.distanationAddress3.Size = new System.Drawing.Size(46, 21);
-            this.distanationAddress3.TabIndex = 10;
+            this.destinationAddress3.FormattingEnabled = true;
+            this.destinationAddress3.Location = new System.Drawing.Point(122, 17);
+            this.destinationAddress3.Name = "destinationAddress3";
+            this.destinationAddress3.Size = new System.Drawing.Size(46, 21);
+            this.destinationAddress3.TabIndex = 10;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(13, 20);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(103, 13);
+            this.label6.Size = new System.Drawing.Size(101, 13);
             this.label6.TabIndex = 9;
-            this.label6.Text = "Distanation address:";
+            this.label6.Text = "destination address:";
             // 
             // groupBox10
             // 
@@ -436,6 +456,7 @@
             this.inputTextBox3.Name = "inputTextBox3";
             this.inputTextBox3.Size = new System.Drawing.Size(199, 27);
             this.inputTextBox3.TabIndex = 5;
+            this.inputTextBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.inputTextBox_KeyPress);
             // 
             // groupBox11
             // 
@@ -467,6 +488,33 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(0, 13);
             this.label7.TabIndex = 0;
+            // 
+            // package2
+            // 
+            this.package2.AutoSize = true;
+            this.package2.Location = new System.Drawing.Point(12, 42);
+            this.package2.Name = "package2";
+            this.package2.Size = new System.Drawing.Size(35, 13);
+            this.package2.TabIndex = 14;
+            this.package2.Text = "label2";
+            // 
+            // package3
+            // 
+            this.package3.AutoSize = true;
+            this.package3.Location = new System.Drawing.Point(13, 40);
+            this.package3.Name = "package3";
+            this.package3.Size = new System.Drawing.Size(35, 13);
+            this.package3.TabIndex = 14;
+            this.package3.Text = "label2";
+            // 
+            // packageMonitor
+            // 
+            this.packageMonitor.AutoSize = true;
+            this.packageMonitor.Location = new System.Drawing.Point(6, 64);
+            this.packageMonitor.Name = "packageMonitor";
+            this.packageMonitor.Size = new System.Drawing.Size(35, 13);
+            this.packageMonitor.TabIndex = 14;
+            this.packageMonitor.Text = "label2";
             // 
             // MainForm
             // 
@@ -521,17 +569,17 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label Station1Token;
-        private System.Windows.Forms.ComboBox distanationAddress1;
+        private System.Windows.Forms.ComboBox destinationAddress1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox holdTimeCheck;
+        private System.Windows.Forms.CheckBox holdTimeCheckBox;
         private System.Windows.Forms.Label monitorToken;
         private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.TextBox holdTimeButton;
+        private System.Windows.Forms.TextBox holdTimeTextBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label Station2Token;
-        private System.Windows.Forms.ComboBox distanationAddress2;
+        private System.Windows.Forms.ComboBox destinationAddress2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox inputTextBox2;
@@ -541,13 +589,17 @@
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Label Station3Token;
-        private System.Windows.Forms.ComboBox distanationAddress3;
+        private System.Windows.Forms.ComboBox destinationAddress3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.TextBox inputTextBox3;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.Panel outputPanel3;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label package1;
+        private System.Windows.Forms.Label packageMonitor;
+        private System.Windows.Forms.Label package2;
+        private System.Windows.Forms.Label package3;
     }
 }
 
