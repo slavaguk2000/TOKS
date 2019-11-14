@@ -17,17 +17,26 @@ namespace ComPort2
         string transmitBuffer = "";
         string recieveBuffer = "";
         char controlSetSymbol = 'C';
+        Int64 beginTicks = 0;
+        public bool holdTimeCheck = false;
+        public int holdTime { get; set; }
         public UserStation(Label output, TextBox input, Label tockenDetect, ComboBox destinationAddressBox, Label packageLabel, int myAddress) : base(tockenDetect, packageLabel)
         {
+            holdTime = 10;
             this.output = output;
             this.input = input;
             this.destinationAddressBox = destinationAddressBox;
             this.myAddress = myAddress;
             destinationAddressBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 destinationAddressBox.Items.Add(i + 1);
             }
+        }
+        public void setHoldTimeCheck(bool flag)
+        {
+            holdTimeCheck = flag;
+            beginTicks = 0;
         }
         public void addStringToTransmitBuffer(TextBox inputTextBox)
         {
@@ -39,6 +48,7 @@ namespace ComPort2
             if (destinationAddress == myAddress) addOutputString(message);
             else transmitBuffer += message;
             input.Text = "";
+            setDestinationEnable(false);
         }
         private void addOutputString(string message)
         {
@@ -75,9 +85,18 @@ namespace ComPort2
             message += transmitBuffer[0];
             return message;
         }
+        private void setDestinationEnable(bool flag)
+        {
+            destinationAddressBox.Invoke((MethodInvoker)delegate { destinationAddressBox.Enabled = flag; });
+        }
         protected override void sendMyMessage()
         {
-            if (transmitBuffer.Length == 0) sendToNextStation(tokenMessage);
+            if (transmitBuffer.Length == 0)
+            {
+                setDestinationEnable(true);
+                sendToNextStation(tokenMessage);
+                beginTicks = 0;
+            }
             else
             {
                 if (destinationAddress == myAddress)
@@ -87,6 +106,16 @@ namespace ComPort2
                 }
                 else
                 {
+                    if(holdTimeCheck)
+                    {
+                        if (beginTicks == 0) beginTicks = getNowTicks();
+                        if (getNowTicks() > beginTicks + ticksFromSeconds(holdTime))
+                        {
+                            sendToNextStation(tokenMessage);
+                            beginTicks = 0;
+                            return;
+                        }
+                    }
                     sendToNextStation(createPackage());
                     transmitBuffer = transmitBuffer.Substring(1);
                 }

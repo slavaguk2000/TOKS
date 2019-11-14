@@ -188,9 +188,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 13);
+            this.label1.Size = new System.Drawing.Size(103, 13);
             this.label1.TabIndex = 9;
-            this.label1.Text = "destination address:";
+            this.label1.Text = "Destination address:";
             // 
             // groupBox2
             // 
@@ -241,6 +241,7 @@
             this.holdTimeCheckBox.TabIndex = 14;
             this.holdTimeCheckBox.Text = "Hold time (seconds):";
             this.holdTimeCheckBox.UseVisualStyleBackColor = true;
+            this.holdTimeCheckBox.CheckedChanged += new System.EventHandler(this.holdTimeCheckBox_CheckedChanged);
             // 
             // monitorToken
             // 
@@ -270,6 +271,7 @@
             this.holdTimeTextBox.TabIndex = 11;
             this.holdTimeTextBox.Text = "10";
             this.holdTimeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.holdTimeTextBox.TextChanged += new System.EventHandler(this.holdTimeTextBox_TextChanged);
             // 
             // groupBox1
             // 
@@ -323,9 +325,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(13, 20);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 13);
+            this.label3.Size = new System.Drawing.Size(103, 13);
             this.label3.TabIndex = 9;
-            this.label3.Text = "destination address:";
+            this.label3.Text = "Destination address:";
             // 
             // groupBox6
             // 
@@ -432,9 +434,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(13, 20);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(101, 13);
+            this.label6.Size = new System.Drawing.Size(103, 13);
             this.label6.TabIndex = 9;
-            this.label6.Text = "destination address:";
+            this.label6.Text = "Destination address:";
             // 
             // groupBox10
             // 

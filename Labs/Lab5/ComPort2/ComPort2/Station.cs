@@ -52,10 +52,18 @@ namespace ComPort2
         {
             selectTokenDetectInvoke("");
         }
+        protected long getNowTicks()
+        {
+            return DateTime.UtcNow.Ticks;
+        }
+        protected long ticksFromSeconds(int seconds)
+        {
+            return (long)seconds * 1000 * 1000 * 10;
+        }
         private void delay(int seconds)
         {
-            var startTicks = DateTime.UtcNow.Ticks;
-            while (DateTime.UtcNow.Ticks < startTicks + seconds*1000*1000*10);
+            var startTicks = getNowTicks();
+            while (getNowTicks() < startTicks + ticksFromSeconds(seconds));
         }
         protected void sendToNextStation(string message)
         {

@@ -27,10 +27,14 @@ namespace ComPort2
         protected override void receiveMessage(string message)
         {
             if (message[0] != frameSymbol) throw new FormatException();
-            if (message[4] == emptySymbol) ReplaceCharInString(ref message, 4, monitorSymbol);
+            if (message[4] == emptySymbol)
+            {
+                ReplaceCharInString(ref message, 4, monitorSymbol);
+                sendToNextStation(message);
+            }
             else if (message[4] == monitorSymbol) sendMyMessage();
             else throw new FormatException();
-            sendToNextStation(message);
+            
         }
 
         protected override void sendMyMessage()

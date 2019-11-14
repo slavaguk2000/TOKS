@@ -21,17 +21,14 @@ namespace ComPort2
             stations[2].setNextStation(monitor);
             monitor.setNextStation(stations[0]);
         }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
 
         }
-
         private void groupBox2_Enter(object sender, EventArgs e)
         {
 
         }
-
         private void startButton_Click(object sender, EventArgs e)
         {
             monitor.startToken();
@@ -52,5 +49,32 @@ namespace ComPort2
             }
         }
 
+        private void holdTimeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox holdTimeCheck = (CheckBox)sender;
+            holdTimeTextBox.Enabled = holdTimeCheck.Checked;
+            foreach(UserStation station in stations)
+            {
+                station.holdTimeCheck = holdTimeCheck.Checked;
+            }
+        }
+
+        private void holdTimeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            TextBox holdTimeBox = (TextBox)sender;
+            try
+            {
+                int holdTime = int.Parse(holdTimeBox.Text);
+                foreach (UserStation station in stations)
+                {
+                    station.holdTime = holdTime;
+                }
+            }
+            catch (Exception)
+            {
+                holdTimeBox.Text = "10";
+                holdTimeTextBox_TextChanged(sender, e);
+            }
+        }
     }
 }
