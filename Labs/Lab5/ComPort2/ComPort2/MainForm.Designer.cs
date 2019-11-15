@@ -41,12 +41,14 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.packageMonitor = new System.Windows.Forms.Label();
             this.holdTimeCheckBox = new System.Windows.Forms.CheckBox();
             this.monitorToken = new System.Windows.Forms.Label();
             this.startButton = new System.Windows.Forms.Button();
             this.holdTimeTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.package2 = new System.Windows.Forms.Label();
             this.Station2Token = new System.Windows.Forms.Label();
             this.destinationAddress2 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -57,6 +59,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.package3 = new System.Windows.Forms.Label();
             this.Station3Token = new System.Windows.Forms.Label();
             this.destinationAddress3 = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -65,9 +68,6 @@
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.outputPanel3 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
-            this.package2 = new System.Windows.Forms.Label();
-            this.package3 = new System.Windows.Forms.Label();
-            this.packageMonitor = new System.Windows.Forms.Label();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.outputPanel1.SuspendLayout();
@@ -232,6 +232,15 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Control && Debug";
             // 
+            // packageMonitor
+            // 
+            this.packageMonitor.AutoSize = true;
+            this.packageMonitor.Location = new System.Drawing.Point(6, 64);
+            this.packageMonitor.Name = "packageMonitor";
+            this.packageMonitor.Size = new System.Drawing.Size(35, 13);
+            this.packageMonitor.TabIndex = 14;
+            this.packageMonitor.Text = "label2";
+            // 
             // holdTimeCheckBox
             // 
             this.holdTimeCheckBox.AutoSize = true;
@@ -301,6 +310,15 @@
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Control && Debug";
+            // 
+            // package2
+            // 
+            this.package2.AutoSize = true;
+            this.package2.Location = new System.Drawing.Point(12, 42);
+            this.package2.Name = "package2";
+            this.package2.Size = new System.Drawing.Size(35, 13);
+            this.package2.TabIndex = 14;
+            this.package2.Text = "label2";
             // 
             // Station2Token
             // 
@@ -411,6 +429,15 @@
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Control && Debug";
             // 
+            // package3
+            // 
+            this.package3.AutoSize = true;
+            this.package3.Location = new System.Drawing.Point(13, 40);
+            this.package3.Name = "package3";
+            this.package3.Size = new System.Drawing.Size(35, 13);
+            this.package3.TabIndex = 14;
+            this.package3.Text = "label2";
+            // 
             // Station3Token
             // 
             this.Station3Token.AutoSize = true;
@@ -491,33 +518,6 @@
             this.label7.Size = new System.Drawing.Size(0, 13);
             this.label7.TabIndex = 0;
             // 
-            // package2
-            // 
-            this.package2.AutoSize = true;
-            this.package2.Location = new System.Drawing.Point(12, 42);
-            this.package2.Name = "package2";
-            this.package2.Size = new System.Drawing.Size(35, 13);
-            this.package2.TabIndex = 14;
-            this.package2.Text = "label2";
-            // 
-            // package3
-            // 
-            this.package3.AutoSize = true;
-            this.package3.Location = new System.Drawing.Point(13, 40);
-            this.package3.Name = "package3";
-            this.package3.Size = new System.Drawing.Size(35, 13);
-            this.package3.TabIndex = 14;
-            this.package3.Text = "label2";
-            // 
-            // packageMonitor
-            // 
-            this.packageMonitor.AutoSize = true;
-            this.packageMonitor.Location = new System.Drawing.Point(6, 64);
-            this.packageMonitor.Name = "packageMonitor";
-            this.packageMonitor.Size = new System.Drawing.Size(35, 13);
-            this.packageMonitor.TabIndex = 14;
-            this.packageMonitor.Text = "label2";
-            // 
             // MainForm
             // 
             this.ClientSize = new System.Drawing.Size(706, 582);
@@ -528,6 +528,7 @@
             this.MinimumSize = new System.Drawing.Size(400, 400);
             this.Name = "MainForm";
             this.Text = "Token Ring";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.inputGroupBox.ResumeLayout(false);
             this.inputGroupBox.PerformLayout();

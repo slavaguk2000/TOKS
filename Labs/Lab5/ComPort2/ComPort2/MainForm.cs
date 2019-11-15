@@ -65,6 +65,7 @@ namespace ComPort2
             try
             {
                 int holdTime = int.Parse(holdTimeBox.Text);
+                if (holdTime < 1) throw new ArgumentException();
                 foreach (UserStation station in stations)
                 {
                     station.holdTime = holdTime;
@@ -75,6 +76,15 @@ namespace ComPort2
                 holdTimeBox.Text = "10";
                 holdTimeTextBox_TextChanged(sender, e);
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach (UserStation station in stations)
+            {
+                station.stop();
+            }
+            monitor.stop();
         }
     }
 }

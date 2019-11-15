@@ -18,6 +18,7 @@ namespace ComPort2
         private Label packageLabel;
         protected Station nextStation = null;
         private string message;
+        Thread processMessageThread;
         public Station(Label tokenDetect, Label packageLabel)
         {
             this.tokenDetect = tokenDetect;
@@ -42,7 +43,7 @@ namespace ComPort2
         }
         private void selectTokenDetectInvoke(string selection)
         {
-            tokenDetect.BeginInvoke((MethodInvoker)(delegate { selectTokenDetect(selection); }));
+            tokenDetect?.BeginInvoke((MethodInvoker)(delegate { selectTokenDetect(selection); }));
         }
         public void setTokenDetect()
         {
@@ -81,15 +82,24 @@ namespace ComPort2
             setTokenDetect();
             setPackage(message);
             this.message = message;
-            Thread processMessageThread = new Thread(new ThreadStart(processMessage));
+            stop();
+            processMessageThread = new Thread(new ThreadStart(processMessage));
             processMessageThread.Start();
+        }
+        public void stop()
+        {
+            processMessageThread?.Abort();
         }
         private void processMessage()
         {
-            delay(1);
-            resetTokenDetect();
-            if (message[0] == tokenMessage[0]) sendMyMessage();
-            else receiveMessage(message);
+            try
+            { 
+                delay(1);
+                resetTokenDetect();
+                if (message[0] == tokenMessage[0]) sendMyMessage();
+                else receiveMessage(message);
+            }
+            catch(ThreadAbortException){}
         }
     }
 }
